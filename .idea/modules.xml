@@ -5,6 +5,7 @@
       <module fileurl="file://$PROJECT_DIR$/YabkProcessor.iml" filepath="$PROJECT_DIR$/YabkProcessor.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
       <module fileurl="file://$PROJECT_DIR$/yabk/yabk.iml" filepath="$PROJECT_DIR$/yabk/yabk.iml" />
+      <module fileurl="file://$PROJECT_DIR$/yabk-annotations/yabk-annotations.iml" filepath="$PROJECT_DIR$/yabk-annotations/yabk-annotations.iml" />
     </modules>
   </component>
 </project>

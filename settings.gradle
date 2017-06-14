@@ -1,1 +1,1 @@
-include ':app', ':yabk'
+include ':app', ':yabk', ':yabk-annotations'
