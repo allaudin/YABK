@@ -9,5 +9,5 @@ import io.github.allaudin.yabk.YabkProcess;
  */
 
 @YabkProcess
-public abstract class AnotherUserModel {
+public class AnotherUserModel {
 }

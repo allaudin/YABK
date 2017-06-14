@@ -20,6 +20,16 @@ import java.lang.annotation.RetentionPolicy;
  *
  * Above annotation will generate a class with name {@code MyGeneratedClass} for a given class.
  *
+ * <p>
+ * <b>Note 1:</b> For classes without {@code $} sign and no class name declared in {@link YabkProcess} annotation, this
+ * processor generates classes with name <em>prefixed with {@code Yabk}</em> e.g.
+ *
+ * For {@code MyModel} class, generated class name will be <b>{@code YabkMyModel}</b>
+ * </p>
+ *
+ * <p><b>Note 2:</b> {@link YabkProcess} annotation on <em>non-abstract</em> classes is simple ignored. No class is generated
+ * for non-abstract classes.</p>
+ *
  * @author M.Allaudin
  */
 
