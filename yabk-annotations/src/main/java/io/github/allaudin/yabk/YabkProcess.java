@@ -6,7 +6,7 @@ import java.lang.annotation.RetentionPolicy;
 /**
  * Annotation for registering a class with YABK to process.
  * <p>
- * By default, YABK expects classes with name, starting with <b>$</b> sign and
+ * By default, YABK expects <b>abstract</b> classes with name, starting with <b>$</b> sign and
  * generates classes with same name <em>by removing <b>$</b> sign</em> .e.g.
  * <p>
  * YABK generates <b>{@code SomeModel}</b> class for a class <b>{@code $SomeModel}</b>, observe the <b>$</b>

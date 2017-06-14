@@ -1,6 +1,8 @@
 package io.github.allaudin.yabk;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import javax.annotation.processing.AbstractProcessor;
@@ -14,22 +16,30 @@ public class YabkProcessor extends AbstractProcessor {
 
     @Override
     public boolean process(Set<? extends TypeElement> set, RoundEnvironment roundEnvironment) {
+
+        // round completed
+        if (roundEnvironment.processingOver()) {
+            return true;
+        }
+
+
+        List<TypeElement> types = new ArrayList<>();
+
+        for (TypeElement e : set) {
+            types.add(e);
+        }
+
         String str = "";
-        return false;
+        return true;
     } // process
 
     @Override
     public Set<String> getSupportedAnnotationTypes() {
         return new HashSet<String>() {
             {
-                add("io.github.allaudin.yabk.Allaudin");
+                add("io.github.allaudin.yabk.YabkProcess");
             }
         };
     } // getSupportedAnnotationTypes
-
-    @Override
-    public Set<String> getSupportedOptions() {
-        return super.getSupportedOptions();
-    }
 
 } // YabkProcessor
