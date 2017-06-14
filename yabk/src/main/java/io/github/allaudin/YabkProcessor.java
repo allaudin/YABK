@@ -12,7 +12,7 @@ public class YabkProcessor extends AbstractProcessor {
     public boolean process(Set<? extends TypeElement> set, RoundEnvironment roundEnvironment) {
         String str = "";
         return false;
-    }
+    } // process
 
     @Override
     public Set<String> getSupportedAnnotationTypes() {
@@ -21,5 +21,6 @@ public class YabkProcessor extends AbstractProcessor {
                 add("allaudin.github.io.yabkprocessor.Allaudin");
             }
         };
-    }
-}
+    } // getSupportedAnnotationTypes
+    
+} // YabkProcessor
