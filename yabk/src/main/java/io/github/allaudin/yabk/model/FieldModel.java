@@ -90,8 +90,8 @@ public class FieldModel {
             case "double":
                 return TypeName.DOUBLE;
         }
-        return TypeName.VOID;
-    }
+        throw new IllegalArgumentException("Unknown type " + name);
+    } // getType
 
     private boolean isPrimitive() {
         return packageName == null || packageName.length() == 0;

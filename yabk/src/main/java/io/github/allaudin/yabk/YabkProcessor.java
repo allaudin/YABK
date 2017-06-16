@@ -37,17 +37,18 @@ public class YabkProcessor extends AbstractProcessor {
             }
             note("Processing %s", e.toString());
 
-            List<? extends Element> enclosedElements = ((TypeElement) e).getEnclosedElements();
+            TypeElement type = (TypeElement) e;
+            List<? extends Element> enclosedElements = type.getEnclosedElements();
 
-            ClassModel classModel = new ClassModel();
+            ClassModel classModel = new ClassModel(type.getQualifiedName().toString());
 
             for (Element ee : enclosedElements) {
 
                 boolean isProtectedOrPrivate = ee.getModifiers().contains(Modifier.PROTECTED) || ee.getModifiers().contains(Modifier.PRIVATE);
                 if (ee.getKind() == ElementKind.FIELD && isProtectedOrPrivate) {
                     note("%s", ee.getSimpleName());
-                    String type = ee.asType().toString();
-                    classModel.add(type, ee.getSimpleName().toString());
+                    String fieldType = ee.asType().toString();
+                    classModel.add(fieldType, ee.getSimpleName().toString());
                 } // end if
             }
             note("%s", classModel.toString());

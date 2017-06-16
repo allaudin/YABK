@@ -13,13 +13,23 @@ import java.util.Set;
 
 public final class ClassModel {
 
+    private static final char DOLLAR_CHAR = "$".charAt(0);
+
     // type-field name
     private Set<FieldModel> fields;
 
+    private String className;
+    private String classPackage;
 
-    public ClassModel() {
+    public ClassModel(String className) {
+        this.classPackage = getPackage(className);
+        this.className = cleanClassName(getName(className));
         fields = new HashSet<>();
     }
+
+    private String cleanClassName(String className) {
+        return className.charAt(0) == DOLLAR_CHAR ? className.replaceFirst(String.valueOf(DOLLAR_CHAR), "") : "Yabk" + className;
+    } // cleanClassName
 
     public void add(String type, String field) {
 
@@ -27,12 +37,19 @@ public final class ClassModel {
         if (!type.contains(".")) {
             fieldModel.setFieldName(field);
         } else {
-            fieldModel.setPackageName(type.substring(0, type.lastIndexOf(".")));
-            fieldModel.setFieldName(type.substring(type.lastIndexOf(".") + 1));
+            fieldModel.setPackageName(getPackage(type));
+            fieldModel.setFieldName(getName(type));
         }
         fields.add(fieldModel);
     }
 
+    private String getPackage(String type) {
+        return type.substring(0, type.lastIndexOf("."));
+    }
+
+    private String getName(String type) {
+        return type.substring(type.lastIndexOf(".") + 1);
+    }
 
     @Override
     public String toString() {
