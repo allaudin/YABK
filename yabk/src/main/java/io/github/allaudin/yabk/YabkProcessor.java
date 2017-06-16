@@ -21,7 +21,7 @@ public class YabkProcessor extends AbstractProcessor {
 
         // round completed
         if (roundEnvironment.processingOver()) {
-            printNote("Yabk round completed.");
+            note("%s", "YABK round completed");
             return true;
         }
 
@@ -29,25 +29,18 @@ public class YabkProcessor extends AbstractProcessor {
         for (Element e : roundEnvironment.getElementsAnnotatedWith(YabkProcess.class)) {
 
             if (!e.getModifiers().contains(Modifier.ABSTRACT)) {
-                printNote("skipping " + e.getSimpleName() + ", it is not abstract.");
+                note("Skipping non-abstract class [%s]", e.getSimpleName());
                 continue;
             }
-
-            List<? extends Element> elements = ((TypeElement) e).getEnclosedElements();
-
-            for (Element ee: elements){
-                printNote(ee.getKind().toString());
-            }
-
-            printNote("processing " + e.toString());
-        }
-
+            note("Processing %s", e.toString());
+        } // end for
+        
 
         return true;
     } // process
 
-    private void printNote(String msg) {
-        processingEnv.getMessager().printMessage(Diagnostic.Kind.NOTE, msg);
+    private void note(String format, Object objects) {
+        processingEnv.getMessager().printMessage(Diagnostic.Kind.NOTE, String.format(format + " ...", objects));
     }
 
     @Override
@@ -55,7 +48,6 @@ public class YabkProcessor extends AbstractProcessor {
         return new HashSet<String>() {
             {
                 add("io.github.allaudin.yabk.YabkProcess");
-                add("io.github.allaudin.yabk.TestAnno");
             }
         };
     } // getSupportedAnnotationTypes
