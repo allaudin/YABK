@@ -62,18 +62,31 @@ public final class ClassModel {
         return type.substring(type.lastIndexOf(".") + 1);
     }
 
-    public void writeTo(Filer filer) throws IOException{
+    public void writeTo(Filer filer) throws Exception {
         JavaFileObject fileObject = filer.createSourceFile(classPackage);
-        TypeSpec.Builder clazzBuilder = TypeSpec.classBuilder(className);
-        clazzBuilder.superclass(ClassName.get(classPackage, parentClass));
-        for (FieldModel field : fields) {
-            clazzBuilder.addMethod(field.getAccessor());
-            clazzBuilder.addMethod(field.getMutator());
+        Writer writer = fileObject.openWriter();
+        try {
+            TypeSpec.Builder clazzBuilder = TypeSpec.classBuilder(className);
+            clazzBuilder.superclass(ClassName.get(classPackage, parentClass));
+            for (FieldModel field : fields) {
+                clazzBuilder.addMethod(field.getAccessor());
+                clazzBuilder.addMethod(field.getMutator());
+            }
+
+
+            JavaFile.builder(classPackage, clazzBuilder.build()).build().writeTo(writer);
+        } catch (IOException ioe) {
+            ioe.printStackTrace();
+            throw new Exception();
+        } finally {
+            if (writer != null) {
+                writer.flush();
+                writer.close();
+            }
         }
 
-        Writer writer = fileObject.openWriter();
-        JavaFile.builder(classPackage, clazzBuilder.build()).build().writeTo(writer);
-    }
+
+    } // writeTo
 
     @Override
     public String toString() {

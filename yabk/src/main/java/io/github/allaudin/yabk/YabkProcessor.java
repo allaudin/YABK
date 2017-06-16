@@ -56,8 +56,7 @@ public class YabkProcessor extends AbstractProcessor {
 
             try {
                 classModel.writeTo(processingEnv.getFiler());
-            } catch (IOException ioe) {
-                ioe.printStackTrace();
+            } catch (Exception ignored) {
                 error("%s", "Error while writing file.");
             }
             note("%s", classModel.toString());
