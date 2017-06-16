@@ -1,6 +1,8 @@
 package io.github.allaudin.yabk.model;
 
 import com.google.gson.Gson;
+import com.squareup.javapoet.ClassName;
+import com.squareup.javapoet.TypeSpec;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -49,6 +51,17 @@ public final class ClassModel {
 
     private String getName(String type) {
         return type.substring(type.lastIndexOf(".") + 1);
+    }
+
+    public TypeSpec getSpec() {
+        ClassName clazz = ClassName.get(classPackage, className);
+        TypeSpec.Builder builder = TypeSpec.classBuilder(clazz);
+
+        for (FieldModel field : fields) {
+            builder.addMethod(field.getAccessor());
+            builder.addMethod(field.getMutator());
+        }
+        return builder.build();
     }
 
     @Override
