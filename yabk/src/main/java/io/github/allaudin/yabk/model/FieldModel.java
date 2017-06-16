@@ -15,6 +15,7 @@ public class FieldModel {
 
     private String packageName;
     private String fieldName;
+    private String fieldType;
 
     public void setPackageName(String packageName) {
         this.packageName = packageName;
@@ -44,12 +45,12 @@ public class FieldModel {
         MethodSpec.Builder builder = MethodSpec.methodBuilder("set" + fieldName);
 
         if (isPrimitive()) {
-            builder.addParameter(getType(fieldName), fieldName);
+            builder.addParameter(getType(fieldType), fieldName);
             builder.addStatement("this.$1L = $1L", fieldName);
         } else {
-            ClassName clazz = ClassName.get(packageName, fieldName);
+            ClassName clazz = ClassName.get(packageName, fieldType);
             builder.addParameter(clazz, fieldName);
-            builder.addStatement("this.$1T = $1T", clazz);
+            builder.addStatement("this.$1T = $1T", fieldName);
         }
 
         builder.returns(void.class);
@@ -61,10 +62,10 @@ public class FieldModel {
 
         if (isPrimitive()) {
             builder.addStatement("return this.$L", fieldName);
-            builder.returns(getType(fieldName));
+            builder.returns(getType(fieldType));
         } else {
-            ClassName clazz = ClassName.get(packageName, fieldName);
-            builder.addStatement("return $T", clazz);
+            ClassName clazz = ClassName.get(packageName, fieldType);
+            builder.addStatement("return this.$L", fieldName);
             builder.returns(clazz);
         }
 
@@ -95,6 +96,14 @@ public class FieldModel {
 
     private boolean isPrimitive() {
         return packageName == null || packageName.length() == 0;
+    }
+
+    public String getFieldType() {
+        return fieldType;
+    }
+
+    public void setFieldType(String fieldType) {
+        this.fieldType = fieldType;
     }
 
     public String getPackageName() {

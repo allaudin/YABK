@@ -1,6 +1,7 @@
 package io.github.allaudin.yabk.model;
 
 import com.google.gson.Gson;
+import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.JavaFile;
 import com.squareup.javapoet.TypeSpec;
 
@@ -22,25 +23,28 @@ public final class ClassModel {
 
     private String className;
     private String classPackage;
+    private String parentClass;
 
     public ClassModel(String className) {
+        this.parentClass = getName(className);
         this.classPackage = getPackage(className);
         this.className = cleanClassName(getName(className));
         fields = new HashSet<>();
     }
 
     private String cleanClassName(String className) {
-        return className.charAt(0) == DOLLAR_CHAR ? className.replaceFirst(String.valueOf(DOLLAR_CHAR), "") : "Yabk" + className;
+        return "Yabk" + className;
     } // cleanClassName
 
     public void add(String type, String field) {
 
         final FieldModel fieldModel = new FieldModel();
+        fieldModel.setFieldName(field);
         if (!type.contains(".")) {
-            fieldModel.setFieldName(field);
+            fieldModel.setFieldType(getName(type));
         } else {
             fieldModel.setPackageName(getPackage(type));
-            fieldModel.setFieldName(getName(type));
+            fieldModel.setFieldType(getName(type));
         }
         fields.add(fieldModel);
     }
@@ -55,7 +59,7 @@ public final class ClassModel {
 
     public JavaFile.Builder writeTo() {
         TypeSpec.Builder clazzBuilder = TypeSpec.classBuilder(className);
-
+        clazzBuilder.addSuperinterface(ClassName.get(classPackage, parentClass));
         for (FieldModel field : fields) {
             clazzBuilder.addMethod(field.getAccessor());
             clazzBuilder.addMethod(field.getMutator());
