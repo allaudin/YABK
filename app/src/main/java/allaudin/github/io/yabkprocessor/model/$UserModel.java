@@ -1,5 +1,6 @@
-package allaudin.github.io.yabkprocessor;
+package allaudin.github.io.yabkprocessor.model;
 
+import allaudin.github.io.yabkprocessor.Model;
 import io.github.allaudin.yabk.YabkProcess;
 
 /**
@@ -13,4 +14,8 @@ public abstract class $UserModel {
     protected String name;
     protected int id;
     protected long no;
+    protected byte flag;
+    protected Integer num;
+
+    protected Model model;
 }

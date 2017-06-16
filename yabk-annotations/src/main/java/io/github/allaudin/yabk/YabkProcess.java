@@ -53,5 +53,5 @@ public @interface YabkProcess {
     // TODO: 6/17/17 check if class if final - skip in this case 
     // TODO: 6/17/17 check if fields are package private or not 
     // TODO: 6/17/17 check if annotation is declared on class or not 
-    // TODO: 6/17/17 add annotations like setteronly, getteronly or skip anno for fields. 
+    // TODO: 6/17/17 add annotations like setteronly, getteronly or skip anno for fields.
 }

@@ -1,6 +1,6 @@
 package io.github.allaudin.yabk;
 
-import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -76,11 +76,9 @@ public class YabkProcessor extends AbstractProcessor {
 
     @Override
     public Set<String> getSupportedAnnotationTypes() {
-        return new HashSet<String>() {
-            {
-                add("io.github.allaudin.yabk.YabkProcess");
-            }
-        };
+        Set<String> annotations = new LinkedHashSet<>();
+        annotations.add(YabkProcess.class.getCanonicalName());
+        return annotations;
     } // getSupportedAnnotationTypes
 
 } // YabkProcessor
