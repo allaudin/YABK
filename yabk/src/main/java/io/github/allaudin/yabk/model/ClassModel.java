@@ -5,13 +5,8 @@ import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.JavaFile;
 import com.squareup.javapoet.TypeSpec;
 
-import java.io.IOException;
-import java.io.Writer;
 import java.util.HashSet;
 import java.util.Set;
-
-import javax.annotation.processing.Filer;
-import javax.tools.JavaFileObject;
 
 /**
  * Created on 6/16/17.
@@ -21,7 +16,6 @@ import javax.tools.JavaFileObject;
 
 public final class ClassModel {
 
-    private static final char DOLLAR_CHAR = "$".charAt(0);
 
     // type-field name
     private Set<FieldModel> fields;
@@ -38,7 +32,7 @@ public final class ClassModel {
     }
 
     private String cleanClassName(String className) {
-        return "Yabk" + className;
+        return className.charAt(0) == "$".charAt(0) ? className.replaceFirst("\\$", "") : "Yabk" + className;
     } // cleanClassName
 
     public void add(String type, String field) {
@@ -62,29 +56,16 @@ public final class ClassModel {
         return type.substring(type.lastIndexOf(".") + 1);
     }
 
-    public void writeTo(Filer filer) throws Exception {
-        JavaFileObject fileObject = filer.createSourceFile(classPackage);
-        Writer writer = fileObject.openWriter();
-        try {
-            TypeSpec.Builder clazzBuilder = TypeSpec.classBuilder(className);
-            clazzBuilder.superclass(ClassName.get(classPackage, parentClass));
-            for (FieldModel field : fields) {
-                clazzBuilder.addMethod(field.getAccessor());
-                clazzBuilder.addMethod(field.getMutator());
-            }
+    public JavaFile getFile() {
 
-
-            JavaFile.builder(classPackage, clazzBuilder.build()).build().writeTo(writer);
-        } catch (IOException ioe) {
-            ioe.printStackTrace();
-            throw new Exception();
-        } finally {
-            if (writer != null) {
-                writer.flush();
-                writer.close();
-            }
+        TypeSpec.Builder clazzBuilder = TypeSpec.classBuilder(className);
+        clazzBuilder.superclass(ClassName.get(classPackage, parentClass));
+        for (FieldModel field : fields) {
+            clazzBuilder.addMethod(field.getAccessor());
+            clazzBuilder.addMethod(field.getMutator());
         }
 
+        return JavaFile.builder(classPackage, clazzBuilder.build()).build();
 
     } // writeTo
 

@@ -44,7 +44,7 @@ public class FieldModel {
     }
 
     public MethodSpec getMutator() {
-        MethodSpec.Builder builder = MethodSpec.methodBuilder("set" + fieldName);
+        MethodSpec.Builder builder = MethodSpec.methodBuilder("set" + getCapitalizedString(fieldName));
 
         if (isPrimitive()) {
             builder.addParameter(getType(fieldType), fieldName);
@@ -60,8 +60,11 @@ public class FieldModel {
         return builder.build();
     } // getMutator
 
+    private String getCapitalizedString(String string){
+        return string.substring(0, 1).toUpperCase() + string.substring(1);
+    }
     public MethodSpec getAccessor() {
-        MethodSpec.Builder builder = MethodSpec.methodBuilder("get" + fieldName);
+        MethodSpec.Builder builder = MethodSpec.methodBuilder("get" + getCapitalizedString(fieldName));
 
         if (isPrimitive()) {
             builder.addStatement("return this.$N", fieldName);
