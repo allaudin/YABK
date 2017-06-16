@@ -1,6 +1,7 @@
 package io.github.allaudin.yabk;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import javax.annotation.processing.AbstractProcessor;
@@ -27,10 +28,17 @@ public class YabkProcessor extends AbstractProcessor {
 
         for (Element e : roundEnvironment.getElementsAnnotatedWith(YabkProcess.class)) {
 
-            if(!e.getModifiers().contains(Modifier.ABSTRACT)){
+            if (!e.getModifiers().contains(Modifier.ABSTRACT)) {
                 printNote("skipping " + e.getSimpleName() + ", it is not abstract.");
                 continue;
             }
+
+            List<? extends Element> elements = ((TypeElement) e).getEnclosedElements();
+
+            for (Element ee: elements){
+                printNote(ee.getKind().toString());
+            }
+
             printNote("processing " + e.toString());
         }
 
