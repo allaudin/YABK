@@ -9,7 +9,7 @@ import io.github.allaudin.yabk.YabkProcess;
  */
 
 @YabkProcess
-public abstract class UserModel {
+public abstract class UserModel extends Model {
     protected String name;
     protected int id;
 }
