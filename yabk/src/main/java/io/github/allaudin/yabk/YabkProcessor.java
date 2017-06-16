@@ -33,13 +33,19 @@ public class YabkProcessor extends AbstractProcessor {
                 continue;
             }
             note("Processing %s", e.toString());
+
+            List<? extends Element> classElements = ((TypeElement) e).getEnclosedElements();
+
+            for (Element ee: classElements){
+                note("%s: %s", ee.getKind(), ee.getSimpleName());
+            }
         } // end for
-        
+
 
         return true;
     } // process
 
-    private void note(String format, Object objects) {
+    private void note(String format, Object... objects) {
         processingEnv.getMessager().printMessage(Diagnostic.Kind.NOTE, String.format(format + " ...", objects));
     }
 
