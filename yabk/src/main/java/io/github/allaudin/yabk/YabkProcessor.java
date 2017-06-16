@@ -28,7 +28,7 @@ public class YabkProcessor extends AbstractProcessor {
         for (Element e : roundEnvironment.getElementsAnnotatedWith(YabkProcess.class)) {
 
             if (!e.getModifiers().contains(Modifier.ABSTRACT)) {
-                note("Skipping non-abstract class [%s].", e.getClass().getSimpleName());
+                note("Skipping non-abstract class [%s].", e.getSimpleName());
                 continue;
             }
             note("Processing %s ...", e.toString());
