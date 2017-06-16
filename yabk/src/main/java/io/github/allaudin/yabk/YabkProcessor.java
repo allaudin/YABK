@@ -9,9 +9,12 @@ import javax.annotation.processing.RoundEnvironment;
 import javax.annotation.processing.SupportedSourceVersion;
 import javax.lang.model.SourceVersion;
 import javax.lang.model.element.Element;
+import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.Modifier;
 import javax.lang.model.element.TypeElement;
 import javax.tools.Diagnostic;
+
+import io.github.allaudin.yabk.model.ClassModel;
 
 @SupportedSourceVersion(SourceVersion.RELEASE_7)
 public class YabkProcessor extends AbstractProcessor {
@@ -34,11 +37,20 @@ public class YabkProcessor extends AbstractProcessor {
             }
             note("Processing %s", e.toString());
 
-            List<? extends Element> classElements = ((TypeElement) e).getEnclosedElements();
+            List<? extends Element> enclosedElements = ((TypeElement) e).getEnclosedElements();
 
-            for (Element ee: classElements){
-                note("%s: %s", ee.getKind(), ee.getSimpleName());
+            ClassModel classModel = new ClassModel();
+
+            for (Element ee : enclosedElements) {
+
+                boolean isProtectedOrPrivate = ee.getModifiers().contains(Modifier.PROTECTED) || ee.getModifiers().contains(Modifier.PRIVATE);
+                if (ee.getKind() == ElementKind.FIELD && isProtectedOrPrivate) {
+                    note("%s", ee.getSimpleName());
+                    String type = ee.asType().toString();
+                    classModel.add(type, ee.getSimpleName().toString());
+                } // end if
             }
+            note("%s", classModel.toString());
         } // end for
 
 

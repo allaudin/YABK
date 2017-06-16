@@ -12,4 +12,5 @@ import io.github.allaudin.yabk.YabkProcess;
 public abstract class UserModel extends Model {
     protected String name;
     protected int id;
+    private Model model;
 }
