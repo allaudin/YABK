@@ -1,7 +1,9 @@
 package io.github.allaudin.yabk;
 
+import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
 /**
  * Annotation for registering a class with YABK to process.
@@ -33,6 +35,8 @@ import java.lang.annotation.RetentionPolicy;
  * @author M.Allaudin
  */
 
+
+@Target(ElementType.TYPE)
 @Retention(RetentionPolicy.CLASS)
 public @interface YabkProcess {
 
@@ -42,4 +46,12 @@ public @interface YabkProcess {
      * @return classname - classname for generated file, default if not specified.
      */
     String genClassName() default "";
+
+    boolean accessorOnly() default false;
+    boolean mutatorOnly() default false;
+
+    // TODO: 6/17/17 check if class if final - skip in this case 
+    // TODO: 6/17/17 check if fields are package private or not 
+    // TODO: 6/17/17 check if annotation is declared on class or not 
+    // TODO: 6/17/17 add annotations like setteronly, getteronly or skip anno for fields. 
 }
