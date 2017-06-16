@@ -1,7 +1,7 @@
 package io.github.allaudin.yabk.model;
 
 import com.google.gson.Gson;
-import com.squareup.javapoet.ClassName;
+import com.squareup.javapoet.JavaFile;
 import com.squareup.javapoet.TypeSpec;
 
 import java.util.HashSet;
@@ -53,15 +53,14 @@ public final class ClassModel {
         return type.substring(type.lastIndexOf(".") + 1);
     }
 
-    public TypeSpec getSpec() {
-        ClassName clazz = ClassName.get(classPackage, className);
-        TypeSpec.Builder builder = TypeSpec.classBuilder(clazz);
+    public JavaFile.Builder writeTo() {
+        TypeSpec.Builder clazzBuilder = TypeSpec.classBuilder(className);
 
         for (FieldModel field : fields) {
-            builder.addMethod(field.getAccessor());
-            builder.addMethod(field.getMutator());
+            clazzBuilder.addMethod(field.getAccessor());
+            clazzBuilder.addMethod(field.getMutator());
         }
-        return builder.build();
+        return JavaFile.builder(classPackage, clazzBuilder.build());
     }
 
     @Override

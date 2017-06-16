@@ -1,5 +1,7 @@
 package io.github.allaudin.yabk;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -42,6 +44,7 @@ public class YabkProcessor extends AbstractProcessor {
 
             ClassModel classModel = new ClassModel(type.getQualifiedName().toString());
 
+
             for (Element ee : enclosedElements) {
 
                 boolean isProtectedOrPrivate = ee.getModifiers().contains(Modifier.PROTECTED) || ee.getModifiers().contains(Modifier.PRIVATE);
@@ -50,6 +53,13 @@ public class YabkProcessor extends AbstractProcessor {
                     String fieldType = ee.asType().toString();
                     classModel.add(fieldType, ee.getSimpleName().toString());
                 } // end if
+            }
+
+            try {
+                classModel.writeTo().build().writeTo((File) processingEnv.getFiler());
+            } catch (IOException ioe) {
+                ioe.printStackTrace();
+                error("%s", "Error while writing file.");
             }
             note("%s", classModel.toString());
         } // end for
@@ -60,6 +70,10 @@ public class YabkProcessor extends AbstractProcessor {
 
     private void note(String format, Object... objects) {
         processingEnv.getMessager().printMessage(Diagnostic.Kind.NOTE, String.format(format + " ...", objects));
+    }
+
+    private void error(String format, Object... objects) {
+        processingEnv.getMessager().printMessage(Diagnostic.Kind.ERROR, String.format(format + " ...", objects));
     }
 
     @Override
