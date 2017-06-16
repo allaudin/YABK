@@ -1,6 +1,5 @@
 package io.github.allaudin.yabk;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.HashSet;
 import java.util.List;
@@ -56,7 +55,7 @@ public class YabkProcessor extends AbstractProcessor {
             }
 
             try {
-                classModel.writeTo().build().writeTo(processingEnv.getFiler());
+                classModel.writeTo(processingEnv.getFiler());
             } catch (IOException ioe) {
                 ioe.printStackTrace();
                 error("%s", "Error while writing file.");

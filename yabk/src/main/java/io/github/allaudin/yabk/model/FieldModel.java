@@ -46,11 +46,11 @@ public class FieldModel {
 
         if (isPrimitive()) {
             builder.addParameter(getType(fieldType), fieldName);
-            builder.addStatement("this.$1L = $1L", fieldName);
+            builder.addStatement("this.$1N = $1N", fieldName);
         } else {
             ClassName clazz = ClassName.get(packageName, fieldType);
             builder.addParameter(clazz, fieldName);
-            builder.addStatement("this.$1T = $1T", fieldName);
+            builder.addStatement("this.$1N = $1N", fieldName);
         }
 
         builder.returns(void.class);
@@ -61,11 +61,11 @@ public class FieldModel {
         MethodSpec.Builder builder = MethodSpec.methodBuilder("get" + fieldName);
 
         if (isPrimitive()) {
-            builder.addStatement("return this.$L", fieldName);
+            builder.addStatement("return this.$N", fieldName);
             builder.returns(getType(fieldType));
         } else {
             ClassName clazz = ClassName.get(packageName, fieldType);
-            builder.addStatement("return this.$L", fieldName);
+            builder.addStatement("return this.$N", fieldName);
             builder.returns(clazz);
         }
 

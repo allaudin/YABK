@@ -5,8 +5,13 @@ import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.JavaFile;
 import com.squareup.javapoet.TypeSpec;
 
+import java.io.IOException;
+import java.io.Writer;
 import java.util.HashSet;
 import java.util.Set;
+
+import javax.annotation.processing.Filer;
+import javax.tools.JavaFileObject;
 
 /**
  * Created on 6/16/17.
@@ -57,14 +62,17 @@ public final class ClassModel {
         return type.substring(type.lastIndexOf(".") + 1);
     }
 
-    public JavaFile.Builder writeTo() {
+    public void writeTo(Filer filer) throws IOException{
+        JavaFileObject fileObject = filer.createSourceFile(classPackage);
         TypeSpec.Builder clazzBuilder = TypeSpec.classBuilder(className);
-        clazzBuilder.addSuperinterface(ClassName.get(classPackage, parentClass));
+        clazzBuilder.superclass(ClassName.get(classPackage, parentClass));
         for (FieldModel field : fields) {
             clazzBuilder.addMethod(field.getAccessor());
             clazzBuilder.addMethod(field.getMutator());
         }
-        return JavaFile.builder(classPackage, clazzBuilder.build());
+
+        Writer writer = fileObject.openWriter();
+        JavaFile.builder(classPackage, clazzBuilder.build()).build().writeTo(writer);
     }
 
     @Override
