@@ -5,6 +5,8 @@ import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.TypeName;
 
+import javax.lang.model.element.Modifier;
+
 /**
  * Created on 6/16/17.
  *
@@ -53,6 +55,7 @@ public class FieldModel {
             builder.addStatement("this.$1N = $1N", fieldName);
         }
 
+        builder.addModifiers(Modifier.PUBLIC);
         builder.returns(void.class);
         return builder.build();
     } // getMutator
@@ -69,6 +72,7 @@ public class FieldModel {
             builder.returns(clazz);
         }
 
+        builder.addModifiers(Modifier.PUBLIC);
         return builder.build();
     } // getAccessor
 
