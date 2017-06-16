@@ -20,7 +20,7 @@ public class YabkProcessor extends AbstractProcessor {
 
         // round completed
         if (roundEnvironment.processingOver()) {
-            note("%s", "YABK round completed.");
+            note("%s", "YABK round completed");
             return true;
         }
 
@@ -28,18 +28,18 @@ public class YabkProcessor extends AbstractProcessor {
         for (Element e : roundEnvironment.getElementsAnnotatedWith(YabkProcess.class)) {
 
             if (!e.getModifiers().contains(Modifier.ABSTRACT)) {
-                note("Skipping non-abstract class [%s].", e.getSimpleName());
+                note("Skipping non-abstract class [%s]", e.getSimpleName());
                 continue;
             }
-            note("Processing %s ...", e.toString());
-        }
+            note("Processing %s", e.toString());
+        } // end for
 
 
         return true;
     } // process
 
     private void note(String format, Object objects) {
-        processingEnv.getMessager().printMessage(Diagnostic.Kind.NOTE, String.format(format, objects));
+        processingEnv.getMessager().printMessage(Diagnostic.Kind.NOTE, String.format(format + " ...", objects));
     }
 
     @Override
