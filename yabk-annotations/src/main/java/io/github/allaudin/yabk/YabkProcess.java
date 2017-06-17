@@ -62,11 +62,5 @@ public @interface YabkProcess {
      * @return true - to convert null strings to empty, false otherwise
      */
     boolean nonNullStrings() default false;
-
-    /**
-     * Make generated class an implementation of android.os.Parcelable.
-     *
-     * @return true - for parcelable object, false otherwise.
-     */
-    boolean parcelable() default true;
+    
 }
