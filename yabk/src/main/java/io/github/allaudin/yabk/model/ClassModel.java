@@ -2,8 +2,12 @@ package io.github.allaudin.yabk.model;
 
 import com.google.gson.Gson;
 import com.squareup.javapoet.ClassName;
+import com.squareup.javapoet.CodeBlock;
+import com.squareup.javapoet.FieldSpec;
 import com.squareup.javapoet.JavaFile;
 import com.squareup.javapoet.MethodSpec;
+import com.squareup.javapoet.ParameterizedTypeName;
+import com.squareup.javapoet.TypeName;
 import com.squareup.javapoet.TypeSpec;
 
 import java.util.HashSet;
@@ -50,6 +54,7 @@ public final class ClassModel {
 
         ClassName parcel = ClassName.get("android.os", "Parcel");
         ClassName parcelable = ClassName.get("android.os", "Parcelable");
+
 
         TypeSpec.Builder clazzBuilder = TypeSpec.classBuilder(classMeta.getClassName());
         clazzBuilder.superclass(ClassName.get(classMeta.getClassPackage(), classMeta.getParentClass()));
@@ -99,10 +104,36 @@ public final class ClassModel {
         clazzBuilder.addMethod(parcelWrite.build());
         clazzBuilder.addMethod(describeContents.build());
 
+        clazzBuilder.addField(getCreateField());
+
         return JavaFile.builder(classMeta.getClassPackage(), clazzBuilder.build()).build();
 
     } // writeTo
 
+
+    private FieldSpec getCreateField(){
+
+        ClassName creator = ClassName.get("android.os.Parcelable", "Creator");
+        ClassName creatorParamType = ClassName.get(classMeta.getClassPackage(), classMeta.getClassName());
+        TypeName creatorType = ParameterizedTypeName.get(creator, creatorParamType);
+
+        CodeBlock block = CodeBlock.of("new Creator<$1N>() {\n" +
+                "        @Override\n" +
+                "        public $1N createFromParcel(Parcel in) {\n" +
+                "            return new $1N(in);\n" +
+                "        }\n\n" +
+                "        @Override\n" +
+                "        public $1N[] newArray(int size) {\n" +
+                "            return new $1N[size];\n" +
+                "        }\n" +
+                "    }", classMeta.getClassName());
+
+        FieldSpec.Builder creatorFieldBuilder = FieldSpec.builder(creatorType, "CREATOR",
+                Modifier.PUBLIC, Modifier.STATIC, Modifier.FINAL)
+                .initializer(block);
+        return creatorFieldBuilder.build();
+
+    } // getCreateField
 
     private void addReadFromParcel(MethodSpec.Builder builder, FieldModel field) {
         String type = field.getFieldType();
