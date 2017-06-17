@@ -14,6 +14,7 @@ public abstract class $UserModel {
     protected String name;
     protected int i;
     protected long no;
+    protected String balance;
     protected byte flag;
     protected Integer num;
 }
