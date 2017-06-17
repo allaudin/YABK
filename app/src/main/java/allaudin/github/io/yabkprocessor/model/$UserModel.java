@@ -12,7 +12,7 @@ import io.github.allaudin.yabk.YabkProcess;
 @YabkProcess
 public abstract class $UserModel {
     protected String name;
-    protected int id;
+    protected int i;
     protected long no;
     protected byte flag;
     protected Integer num;

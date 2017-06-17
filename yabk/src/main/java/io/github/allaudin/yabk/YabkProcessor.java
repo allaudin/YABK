@@ -49,12 +49,7 @@ public class YabkProcessor extends AbstractProcessor {
 
 
             for (Element ee : enclosedElements) {
-
-                boolean isProtectedOrPrivate = ee.getModifiers().contains(Modifier.PROTECTED) || ee.getModifiers().contains(Modifier.PRIVATE);
-                if (ee.getKind() == ElementKind.FIELD && isProtectedOrPrivate) {
-                    String fieldType = ee.asType().toString();
-                    classModel.add(fieldType, ee.getSimpleName().toString());
-                } // end if
+                processField(classModel, ee);
             }
 
             try {
@@ -69,6 +64,18 @@ public class YabkProcessor extends AbstractProcessor {
 
         return true;
     } // process
+
+    private void processField(ClassModel classModel, Element ee) {
+
+        boolean isNotSkipped = ee.getAnnotation(YabkSkip.class) == null;
+        boolean isProtected = ee.getModifiers().contains(Modifier.PROTECTED);
+        boolean isField = ee.getKind() == ElementKind.FIELD;
+
+        if (isField && isProtected && isNotSkipped) {
+            String fieldType = ee.asType().toString();
+            classModel.add(fieldType, ee.getSimpleName().toString());
+        }
+    } // processField
 
     private void note(String format, Object... objects) {
         processingEnv.getMessager().printMessage(Diagnostic.Kind.NOTE, String.format(format + " ...\n\n", objects));

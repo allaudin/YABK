@@ -112,7 +112,7 @@ class FieldModel {
     private boolean isPrimitive() {
         return packageName == null || packageName.length() == 0;
     }
-    
+
     void setFieldType(String fieldType) {
         this.fieldType = fieldType;
     }
