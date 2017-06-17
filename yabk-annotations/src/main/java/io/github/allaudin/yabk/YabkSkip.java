@@ -6,7 +6,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Created on 6/17/17.
+ * Skip method generation for this field.
  *
  * @author M.Allaudin
  */
