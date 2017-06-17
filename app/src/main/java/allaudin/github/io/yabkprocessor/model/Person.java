@@ -1,7 +1,6 @@
 package allaudin.github.io.yabkprocessor.model;
 
 import io.github.allaudin.yabk.YabkProcess;
-import io.github.allaudin.yabk.YabkSkip;
 
 /**
  * Created on 6/17/17.
@@ -10,15 +9,12 @@ import io.github.allaudin.yabk.YabkSkip;
  */
 
 @SuppressWarnings("WeakerAccess")
-@YabkProcess(genClassName = "MyPerson")
+@YabkProcess(nonNullStrings = true)
 public abstract class Person {
 
-    @YabkSkip
+    protected String father;
+
     protected boolean name;
     private byte id;
-    protected int myInt;
-    protected float myFloat;
-    protected long myLong;
-    protected String myString;
-    protected double myDouble;
+
 }

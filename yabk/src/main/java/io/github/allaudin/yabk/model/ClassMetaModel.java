@@ -2,6 +2,7 @@ package io.github.allaudin.yabk.model;
 
 import javax.lang.model.element.TypeElement;
 
+import io.github.allaudin.yabk.Methods;
 import io.github.allaudin.yabk.Utils;
 import io.github.allaudin.yabk.YabkProcess;
 
@@ -16,6 +17,9 @@ public class ClassMetaModel {
     private String className;
     private String classPackage;
     private String parentClass;
+    private Methods methods;
+
+    private boolean nonNullStrings;
 
     public ClassMetaModel(TypeElement e) {
         String type = e.getQualifiedName().toString();
@@ -23,12 +27,15 @@ public class ClassMetaModel {
         classPackage = Utils.getPackage(type);
 
         YabkProcess yabkProcess = e.getAnnotation(YabkProcess.class);
-        if (yabkProcess.genClassName().length() == 0) {
+        if (yabkProcess.className().length() == 0) {
             className = cleanClassName(Utils.getClassName(type));
         } else {
-            className = yabkProcess.genClassName();
+            className = yabkProcess.className();
         }
-    }
+
+        methods = yabkProcess.methods();
+        nonNullStrings = yabkProcess.nonNullStrings();
+    } // ClassMetaModel
 
     private String cleanClassName(String className) {
         return className.charAt(0) == "$".charAt(0) ? className.replaceFirst("\\$", "") : "Yabk" + className;
@@ -44,5 +51,13 @@ public class ClassMetaModel {
 
     String getParentClass() {
         return parentClass;
+    }
+
+    Methods getMethods() {
+        return methods;
+    }
+
+    boolean nonNullStrings() {
+        return nonNullStrings;
     }
 } // ClassMetaModel

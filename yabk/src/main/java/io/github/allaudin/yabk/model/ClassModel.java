@@ -10,6 +10,7 @@ import java.util.Set;
 
 import javax.lang.model.element.Modifier;
 
+import io.github.allaudin.yabk.Methods;
 import io.github.allaudin.yabk.Utils;
 
 /**
@@ -49,10 +50,22 @@ public final class ClassModel {
         TypeSpec.Builder clazzBuilder = TypeSpec.classBuilder(classMeta.getClassName());
         clazzBuilder.superclass(ClassName.get(classMeta.getClassPackage(), classMeta.getParentClass()));
         clazzBuilder.addModifiers(Modifier.PUBLIC);
+
+        boolean nonNullString = classMeta.nonNullStrings();
+        boolean mutatorOnly = classMeta.getMethods() == Methods.MUTATORS;
+        boolean accessorOnly = classMeta.getMethods() == Methods.ACCESSORS;
+
+
         for (FieldModel field : fields) {
-            clazzBuilder.addMethod(field.getAccessor());
-            clazzBuilder.addMethod(field.getMutator());
-        }
+            if (mutatorOnly) {
+                clazzBuilder.addMethod(field.getMutator());
+            } else if (accessorOnly) {
+                clazzBuilder.addMethod(field.getAccessor(nonNullString));
+            } else {
+                clazzBuilder.addMethod(field.getMutator());
+                clazzBuilder.addMethod(field.getAccessor(nonNullString));
+            }
+        } // end for
 
         return JavaFile.builder(classMeta.getClassPackage(), clazzBuilder.build()).build();
 

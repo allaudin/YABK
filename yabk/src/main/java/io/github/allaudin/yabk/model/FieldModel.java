@@ -64,7 +64,7 @@ class FieldModel {
         return string.substring(0, 1).toUpperCase() + string.substring(1);
     }
 
-    MethodSpec getAccessor() {
+    MethodSpec getAccessor(boolean nonNullString) {
         MethodSpec.Builder builder = MethodSpec.methodBuilder("get" + getCapitalizedString(fieldName));
 
         if (isPrimitive()) {
@@ -73,8 +73,7 @@ class FieldModel {
         } else {
             ClassName clazz = ClassName.get(packageName, fieldType);
 
-            // TODO: 6/17/17 pass it via annotation
-            if (fieldType.equals("String")) {
+            if (nonNullString && fieldType.equals("String")) {
                 String format = "return this.$1N == null? $2S: this.$1N ";
                 builder.addStatement(format, fieldName, "");
             } else {

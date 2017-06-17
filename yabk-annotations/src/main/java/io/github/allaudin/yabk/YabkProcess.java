@@ -18,7 +18,7 @@ import java.lang.annotation.Target;
  * classes with name of your own choice.
  * <p>
  * For generating classes with different name, pass <b>generated class name</b> to {@link YabkProcess} annotation. e.g.
- * <pre>{@code @YabkProcess(genClassName = "MyGeneratedClass")}</pre>
+ * <pre>{@code @YabkProcess(className = "MyGeneratedClass")}</pre>
  *
  * Above annotation will generate a class with name {@code MyGeneratedClass} for a given class.
  *
@@ -45,10 +45,11 @@ public @interface YabkProcess {
      *
      * @return classname - classname for generated file, default if not specified.
      */
-    String genClassName() default "";
+    String className() default "";
 
-    boolean accessorOnly() default false;
-    boolean mutatorOnly() default false;
+    Methods methods() default Methods.BOTH;
+
+    boolean nonNullStrings() default false;
 
     // TODO: 6/17/17 check if class if final - skip in this case 
     // TODO: 6/17/17 check if fields are package private or not 
