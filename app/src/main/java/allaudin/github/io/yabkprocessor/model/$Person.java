@@ -3,17 +3,14 @@ package allaudin.github.io.yabkprocessor.model;
 import io.github.allaudin.yabk.YabkProcess;
 
 /**
- * Created on 6/15/17.
+ * Created on 6/18/17.
  *
  * @author M.Allaudin
  */
 
-@SuppressWarnings("WeakerAccess")
 @YabkProcess
-public abstract class $UserModel {
+public abstract class $Person {
     protected String name;
     protected int id;
-    protected long card;
-    protected String phone;
-    protected boolean isMarried;
+    protected String family;
 }
