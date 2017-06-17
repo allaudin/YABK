@@ -6,7 +6,6 @@ import java.util.Set;
 
 import javax.annotation.processing.AbstractProcessor;
 import javax.annotation.processing.RoundEnvironment;
-import javax.annotation.processing.SupportedSourceVersion;
 import javax.lang.model.SourceVersion;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
@@ -14,10 +13,9 @@ import javax.lang.model.element.Modifier;
 import javax.lang.model.element.TypeElement;
 import javax.tools.Diagnostic;
 
-import io.github.allaudin.yabk.generator.ClassMetaModel;
 import io.github.allaudin.yabk.generator.ClassGenerator;
+import io.github.allaudin.yabk.generator.ClassMetaModel;
 
-@SupportedSourceVersion(SourceVersion.RELEASE_7)
 public class YabkProcessor extends AbstractProcessor {
 
     @Override
@@ -63,6 +61,11 @@ public class YabkProcessor extends AbstractProcessor {
 
         return true;
     } // process
+
+    @Override
+    public SourceVersion getSupportedSourceVersion() {
+        return SourceVersion.latestSupported();
+    } // getSupportedSourceVersion
 
     private void processField(ClassGenerator classGenerator, Element ee) {
 
