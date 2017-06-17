@@ -19,7 +19,7 @@ import io.github.allaudin.yabk.Methods;
 import io.github.allaudin.yabk.Utils;
 
 /**
- * Created on 6/16/17.
+ * Generates class from given fields and meta data.
  *
  * @author M.Allaudin
  */

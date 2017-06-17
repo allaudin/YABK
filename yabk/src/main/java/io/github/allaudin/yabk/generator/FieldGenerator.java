@@ -8,7 +8,7 @@ import com.squareup.javapoet.TypeName;
 import javax.lang.model.element.Modifier;
 
 /**
- * Created on 6/16/17.
+ * Stores information about field and generates getters/setters for the field (if asked)
  *
  * @author M.Allaudin
  */
