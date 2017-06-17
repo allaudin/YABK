@@ -1,4 +1,4 @@
-package io.github.allaudin.yabk.model;
+package io.github.allaudin.yabk.generator;
 
 import javax.lang.model.element.TypeElement;
 

@@ -1,4 +1,4 @@
-package io.github.allaudin.yabk.model;
+package io.github.allaudin.yabk.generator;
 
 import com.google.gson.Gson;
 import com.squareup.javapoet.ClassName;
@@ -24,13 +24,13 @@ import io.github.allaudin.yabk.Utils;
  * @author M.Allaudin
  */
 
-public final class ClassModel {
+public final class ClassGenerator {
 
-    private Set<FieldModel> fields;
+    private Set<FieldGenerator> fields;
     private ClassMetaModel classMeta;
 
 
-    public ClassModel(ClassMetaModel classMeta) {
+    public ClassGenerator(ClassMetaModel classMeta) {
         this.classMeta = classMeta;
         fields = new HashSet<>();
     }
@@ -38,15 +38,15 @@ public final class ClassModel {
 
     public void add(String type, String field) {
 
-        final FieldModel fieldModel = new FieldModel();
-        fieldModel.setFieldName(field);
+        final FieldGenerator fieldGenerator = new FieldGenerator();
+        fieldGenerator.setFieldName(field);
         if (!type.contains(".")) {
-            fieldModel.setFieldType(Utils.getClassName(type));
+            fieldGenerator.setFieldType(Utils.getClassName(type));
         } else {
-            fieldModel.setPackageName(Utils.getPackage(type));
-            fieldModel.setFieldType(Utils.getClassName(type));
+            fieldGenerator.setPackageName(Utils.getPackage(type));
+            fieldGenerator.setFieldType(Utils.getClassName(type));
         }
-        fields.add(fieldModel);
+        fields.add(fieldGenerator);
     }
 
 
@@ -78,7 +78,7 @@ public final class ClassModel {
                 .addParameter(int.class, "flags");
 
 
-        for (FieldModel field : fields) {
+        for (FieldGenerator field : fields) {
 
             addWriteToParcel(parcelWrite, field);
             addReadFromParcel(parcelConstructor, field);
@@ -135,7 +135,7 @@ public final class ClassModel {
 
     } // getCreateField
 
-    private void addReadFromParcel(MethodSpec.Builder builder, FieldModel field) {
+    private void addReadFromParcel(MethodSpec.Builder builder, FieldGenerator field) {
         String type = field.getFieldType();
         String name = field.getFieldName();
         String format = "";
@@ -172,7 +172,7 @@ public final class ClassModel {
     } // addReadFromParcel
 
 
-    private void addWriteToParcel(MethodSpec.Builder builder, FieldModel field) {
+    private void addWriteToParcel(MethodSpec.Builder builder, FieldGenerator field) {
         String type = field.getFieldType();
         String name = field.getFieldName();
         String format = "";

@@ -14,8 +14,8 @@ import javax.lang.model.element.Modifier;
 import javax.lang.model.element.TypeElement;
 import javax.tools.Diagnostic;
 
-import io.github.allaudin.yabk.model.ClassMetaModel;
-import io.github.allaudin.yabk.model.ClassModel;
+import io.github.allaudin.yabk.generator.ClassMetaModel;
+import io.github.allaudin.yabk.generator.ClassGenerator;
 
 @SupportedSourceVersion(SourceVersion.RELEASE_7)
 public class YabkProcessor extends AbstractProcessor {
@@ -43,16 +43,16 @@ public class YabkProcessor extends AbstractProcessor {
 
             note("Processing %s", e.toString());
 
-            ClassModel classModel = new ClassModel(new ClassMetaModel(type));
+            ClassGenerator classGenerator = new ClassGenerator(new ClassMetaModel(type));
 
             List<? extends Element> enclosedElements = type.getEnclosedElements();
 
             for (Element ee : enclosedElements) {
-                processField(classModel, ee);
+                processField(classGenerator, ee);
             }
 
             try {
-                classModel.getFile().writeTo(processingEnv.getFiler());
+                classGenerator.getFile().writeTo(processingEnv.getFiler());
             } catch (Exception ioe) {
                 ioe.printStackTrace();
                 error(e, "%s", "Error while writing file [500]");
@@ -64,7 +64,7 @@ public class YabkProcessor extends AbstractProcessor {
         return true;
     } // process
 
-    private void processField(ClassModel classModel, Element ee) {
+    private void processField(ClassGenerator classGenerator, Element ee) {
 
         boolean isNotSkipped = ee.getAnnotation(YabkSkip.class) == null;
         boolean isProtected = ee.getModifiers().contains(Modifier.PROTECTED);
@@ -72,7 +72,7 @@ public class YabkProcessor extends AbstractProcessor {
 
         if (isField && isProtected && isNotSkipped) {
             String fieldType = ee.asType().toString();
-            classModel.add(fieldType, ee.getSimpleName().toString());
+            classGenerator.add(fieldType, ee.getSimpleName().toString());
         }
     } // processField
 

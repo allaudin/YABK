@@ -1,4 +1,4 @@
-package io.github.allaudin.yabk.model;
+package io.github.allaudin.yabk.generator;
 
 import com.google.gson.Gson;
 import com.squareup.javapoet.ClassName;
@@ -13,7 +13,7 @@ import javax.lang.model.element.Modifier;
  * @author M.Allaudin
  */
 
-class FieldModel {
+class FieldGenerator {
 
     private String packageName;
     private String fieldName;
@@ -27,11 +27,11 @@ class FieldModel {
         this.fieldName = fieldName;
     }
 
-    public String getFieldName() {
+    String getFieldName() {
         return fieldName;
     }
 
-    public String getFieldType() {
+    String getFieldType() {
         return fieldType;
     }
 
