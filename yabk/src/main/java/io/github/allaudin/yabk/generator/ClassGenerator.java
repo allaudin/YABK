@@ -82,8 +82,8 @@ public final class ClassGenerator {
 
         for (FieldGenerator field : fields) {
 
-            addWriteToParcel(parcelWrite, field);
-            addReadFromParcel(parcelConstructor, field);
+            addParcelStatements(parcelWrite, field, false);
+            addParcelStatements(parcelConstructor, field, true);
 
             if (mutatorOnly) {
                 clazzBuilder.addMethod(field.getMutator());
@@ -137,7 +137,7 @@ public final class ClassGenerator {
 
     } // getParcelCreateField
 
-    private void addReadFromParcel(MethodSpec.Builder builder, FieldGenerator field) {
+    private void addParcelStatements(MethodSpec.Builder builder, FieldGenerator field, boolean read) {
         String type = field.getFieldType();
         String name = field.getFieldName();
         String format = "";
@@ -145,25 +145,25 @@ public final class ClassGenerator {
         switch (type) {
 
             case "boolean":
-                format = "this.$N = in.readByte() != 0";
+                format = read? "this.$N = in.readByte() != 0": "dest.writeByte((byte) ($N ? 1 : 0))";
                 break;
             case "byte":
-                format = "this.$N = in.readByte()";
+                format = read? "this.$N = in.readByte()": "dest.writeByte($N)";
                 break;
             case "int":
-                format = "this.$N = in.readInt()";
+                format = read? "this.$N = in.readInt()": "dest.writeInt($N)";
                 break;
             case "long":
-                format = "this.$N = in.readLong()";
+                format = read? "this.$N = in.readLong()": "dest.writeLong($N)";
                 break;
             case "float":
-                format = "this.$N = in.readFloat()";
+                format = read? "this.$N = in.readFloat()": "dest.writeFloat($N)";
                 break;
             case "String":
-                format = "this.$N = in.readString()";
+                format = read? "this.$N = in.readString()": "dest.writeString($N)";
                 break;
             case "double":
-                format = "this.$N = in.readDouble()";
+                format = read? "this.$N = in.readDouble()": "dest.writeDouble($N)";
                 break;
 
         } // switch
@@ -171,44 +171,8 @@ public final class ClassGenerator {
         if (format.length() > 0) {
             builder.addStatement(format, name);
         }
-    } // addReadFromParcel
+    } // addParcelStatements
 
-
-    private void addWriteToParcel(MethodSpec.Builder builder, FieldGenerator field) {
-        String type = field.getFieldType();
-        String name = field.getFieldName();
-        String format = "";
-
-        switch (type) {
-
-            case "boolean":
-                format = "dest.writeByte((byte) ($N ? 1 : 0))";
-                break;
-            case "byte":
-                format = " dest.writeByte($N)";
-                break;
-            case "int":
-                format = " dest.writeInt($N)";
-                break;
-            case "long":
-                format = " dest.writeLong($N)";
-                break;
-            case "float":
-                format = " dest.writeFloat($N)";
-                break;
-            case "String":
-                format = " dest.writeString($N)";
-                break;
-            case "double":
-                format = " dest.writeDouble($N)";
-                break;
-
-        } // switch
-
-        if (format.length() > 0) {
-            builder.addStatement(format, name);
-        }
-    } // addWriteToParcel
 
     @Override
     public String toString() {
