@@ -137,6 +137,13 @@ public final class ClassGenerator {
 
     } // getParcelCreateField
 
+    /**
+     * Add parcelable statements
+     *
+     * @param builder method builder
+     * @param field   parcelable field
+     * @param read    true - if it is read statement, false if it is write.
+     */
     private void addParcelStatements(MethodSpec.Builder builder, FieldGenerator field, boolean read) {
         String type = field.getFieldType();
         String name = field.getFieldName();
@@ -145,25 +152,25 @@ public final class ClassGenerator {
         switch (type) {
 
             case "boolean":
-                format = read? "this.$N = in.readByte() != 0": "dest.writeByte((byte) ($N ? 1 : 0))";
+                format = read ? "this.$N = in.readByte() != 0" : "dest.writeByte((byte) ($N ? 1 : 0))";
                 break;
             case "byte":
-                format = read? "this.$N = in.readByte()": "dest.writeByte($N)";
+                format = read ? "this.$N = in.readByte()" : "dest.writeByte($N)";
                 break;
             case "int":
-                format = read? "this.$N = in.readInt()": "dest.writeInt($N)";
+                format = read ? "this.$N = in.readInt()" : "dest.writeInt($N)";
                 break;
             case "long":
-                format = read? "this.$N = in.readLong()": "dest.writeLong($N)";
+                format = read ? "this.$N = in.readLong()" : "dest.writeLong($N)";
                 break;
             case "float":
-                format = read? "this.$N = in.readFloat()": "dest.writeFloat($N)";
+                format = read ? "this.$N = in.readFloat()" : "dest.writeFloat($N)";
                 break;
             case "String":
-                format = read? "this.$N = in.readString()": "dest.writeString($N)";
+                format = read ? "this.$N = in.readString()" : "dest.writeString($N)";
                 break;
             case "double":
-                format = read? "this.$N = in.readDouble()": "dest.writeDouble($N)";
+                format = read ? "this.$N = in.readDouble()" : "dest.writeDouble($N)";
                 break;
 
         } // switch
