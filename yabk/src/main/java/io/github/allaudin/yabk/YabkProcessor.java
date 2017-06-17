@@ -24,7 +24,7 @@ public class YabkProcessor extends AbstractProcessor {
 
         // round completed
         if (roundEnvironment.processingOver()) {
-            note("%s", "YABK round completed [200]");
+            note("%s", "YABK round completed [Everything is OK]");
             return true;
         }
 
