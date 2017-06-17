@@ -37,6 +37,7 @@ public class YabkProcessor extends AbstractProcessor {
                 note("Skipping %s  [%s]", e.getKind(), e.getSimpleName());
                 continue;
             }
+
             TypeElement type = (TypeElement) e;
 
             note("Processing %s", e.toString());
