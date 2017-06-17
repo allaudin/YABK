@@ -13,6 +13,7 @@ import io.github.allaudin.yabk.YabkProcess;
 public abstract class $UserModel {
     protected String name;
     protected int id;
+    protected long card;
     protected String phone;
     protected boolean isMarried;
 
