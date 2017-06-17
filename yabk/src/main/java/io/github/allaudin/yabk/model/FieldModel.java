@@ -71,7 +71,14 @@ public class FieldModel {
             builder.returns(getType(fieldType));
         } else {
             ClassName clazz = ClassName.get(packageName, fieldType);
-            builder.addStatement("return this.$N", fieldName);
+
+            // TODO: 6/17/17 pass it via annotation
+            if(fieldType.equals("String")){
+                String format = "return this.$1N == null? $2S: this.$1N ";
+                builder.addStatement(format, fieldName, "");
+            }else {
+                builder.addStatement("return this.$1N = $1N", fieldName);
+            }
             builder.returns(clazz);
         }
 

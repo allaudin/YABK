@@ -8,8 +8,14 @@ import io.github.allaudin.yabk.YabkProcess;
  * @author M.Allaudin
  */
 
+@SuppressWarnings("WeakerAccess")
 @YabkProcess
 public abstract class $Person {
-    protected String name;
-    protected int id;
+    protected boolean name;
+    protected byte id;
+    protected int myInt;
+    protected float myFloat;
+    protected long myLong;
+    protected String myString;
+    protected double myDouble;
 }

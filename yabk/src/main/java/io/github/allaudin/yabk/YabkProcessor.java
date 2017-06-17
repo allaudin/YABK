@@ -31,8 +31,8 @@ public class YabkProcessor extends AbstractProcessor {
 
         for (Element e : roundEnvironment.getElementsAnnotatedWith(YabkProcess.class)) {
 
-            if (!e.getModifiers().contains(Modifier.ABSTRACT)) {
-                note("Skipping non-abstract class [%s]", e.getSimpleName());
+            if (!e.getModifiers().contains(Modifier.ABSTRACT) || e.getKind() != ElementKind.CLASS) {
+                note("Skipping %s  [%s]", e.getKind(), e.getSimpleName());
                 continue;
             }
             note("Processing %s", e.toString());
@@ -47,7 +47,6 @@ public class YabkProcessor extends AbstractProcessor {
 
                 boolean isProtectedOrPrivate = ee.getModifiers().contains(Modifier.PROTECTED) || ee.getModifiers().contains(Modifier.PRIVATE);
                 if (ee.getKind() == ElementKind.FIELD && isProtectedOrPrivate) {
-                    note("%s", ee.getSimpleName());
                     String fieldType = ee.asType().toString();
                     classModel.add(fieldType, ee.getSimpleName().toString());
                 } // end if
@@ -59,7 +58,8 @@ public class YabkProcessor extends AbstractProcessor {
                 ioe.printStackTrace();
                 error("%s", "Error while writing file.");
             }
-            note("%s", classModel.toString());
+            
+            note("Processed - %s", classModel.toString());
         } // end for
 
 

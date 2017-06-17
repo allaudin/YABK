@@ -8,6 +8,8 @@ import com.squareup.javapoet.TypeSpec;
 import java.util.HashSet;
 import java.util.Set;
 
+import javax.lang.model.element.Modifier;
+
 /**
  * Created on 6/16/17.
  *
@@ -60,6 +62,7 @@ public final class ClassModel {
 
         TypeSpec.Builder clazzBuilder = TypeSpec.classBuilder(className);
         clazzBuilder.superclass(ClassName.get(classPackage, parentClass));
+        clazzBuilder.addModifiers(Modifier.PUBLIC);
         for (FieldModel field : fields) {
             clazzBuilder.addMethod(field.getAccessor());
             clazzBuilder.addMethod(field.getMutator());

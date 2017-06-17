@@ -1,6 +1,5 @@
 package allaudin.github.io.yabkprocessor.model;
 
-import allaudin.github.io.yabkprocessor.Model;
 import io.github.allaudin.yabk.YabkProcess;
 
 /**
@@ -9,6 +8,7 @@ import io.github.allaudin.yabk.YabkProcess;
  * @author M.Allaudin
  */
 
+@SuppressWarnings("WeakerAccess")
 @YabkProcess
 public abstract class $UserModel {
     protected String name;
@@ -16,6 +16,4 @@ public abstract class $UserModel {
     protected long no;
     protected byte flag;
     protected Integer num;
-
-    protected Model model;
 }
