@@ -98,7 +98,7 @@ public final class ClassModel {
         clazzBuilder.addMethod(parcelConstructor.build());
         clazzBuilder.addMethod(parcelWrite.build());
         clazzBuilder.addMethod(describeContents.build());
-        
+
         return JavaFile.builder(classMeta.getClassPackage(), clazzBuilder.build()).build();
 
     } // writeTo
@@ -123,13 +123,13 @@ public final class ClassModel {
             case "long":
                 format = "this.$N = in.readLong()";
                 break;
-
             case "float":
                 format = "this.$N = in.readFloat()";
                 break;
             case "double":
                 format = "this.$N = in.readDouble()";
                 break;
+
         } // switch
 
         if (format.length() > 0) {
@@ -151,26 +151,25 @@ public final class ClassModel {
             case "byte":
                 format = " dest.writeByte($N)";
                 break;
-
             case "int":
                 format = " dest.writeInt($N)";
                 break;
             case "long":
                 format = " dest.writeLong($N)";
                 break;
-
             case "float":
                 format = " dest.writeFloat($N)";
                 break;
             case "double":
                 format = " dest.writeDouble($N)";
                 break;
+
         } // switch
 
         if (format.length() > 0) {
             builder.addStatement(format, name);
         }
-    } // addReadFromParcel
+    } // addWriteToParcel
 
     @Override
     public String toString() {
