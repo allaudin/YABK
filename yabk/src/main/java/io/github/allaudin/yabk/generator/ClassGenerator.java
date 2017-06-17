@@ -56,13 +56,13 @@ public final class ClassGenerator {
         ClassName parcelable = ClassName.get("android.os", "Parcelable");
 
 
+        MethodSpec noArgConstructor = MethodSpec.constructorBuilder().addModifiers(Modifier.PUBLIC).build();
+
         TypeSpec.Builder clazzBuilder = TypeSpec.classBuilder(classMeta.getClassName());
-        clazzBuilder.superclass(ClassName.get(classMeta.getClassPackage(), classMeta.getParentClass()));
-        clazzBuilder.addSuperinterface(parcelable);
-
-        clazzBuilder.addModifiers(Modifier.PUBLIC);
-
-        clazzBuilder.addMethod(MethodSpec.constructorBuilder().addModifiers(Modifier.PUBLIC).build());
+        clazzBuilder.superclass(ClassName.get(classMeta.getClassPackage(), classMeta.getParentClass()))
+                .addSuperinterface(parcelable)
+                .addModifiers(Modifier.PUBLIC)
+                .addMethod(noArgConstructor);
 
         boolean nonNullString = classMeta.nonNullStrings();
         boolean mutatorOnly = classMeta.getMethods() == Methods.MUTATORS;
@@ -102,18 +102,18 @@ public final class ClassGenerator {
                 .addAnnotation(Override.class)
                 .addStatement("return $L", 0);
 
+        // add parcel methods
         clazzBuilder.addMethod(parcelConstructor.build());
         clazzBuilder.addMethod(parcelWrite.build());
         clazzBuilder.addMethod(describeContents.build());
-
-        clazzBuilder.addField(getCreateField());
+        clazzBuilder.addField(getParcelCreateField());
 
         return JavaFile.builder(classMeta.getClassPackage(), clazzBuilder.build()).build();
 
     } // writeTo
 
 
-    private FieldSpec getCreateField() {
+    private FieldSpec getParcelCreateField() {
 
         ClassName creator = ClassName.get("android.os.Parcelable", "Creator");
         ClassName creatorParamType = ClassName.get(classMeta.getClassPackage(), classMeta.getClassName());
@@ -135,7 +135,7 @@ public final class ClassGenerator {
                 .initializer(block);
         return creatorFieldBuilder.build();
 
-    } // getCreateField
+    } // getParcelCreateField
 
     private void addReadFromParcel(MethodSpec.Builder builder, FieldGenerator field) {
         String type = field.getFieldType();
