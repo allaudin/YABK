@@ -10,7 +10,7 @@ import io.github.allaudin.yabk.YabkProcess;
 
 @SuppressWarnings("WeakerAccess")
 @YabkProcess
-public abstract class $Person {
+public abstract class Person {
     protected boolean name;
     protected byte id;
     protected int myInt;
