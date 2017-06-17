@@ -9,7 +9,6 @@ import io.github.allaudin.yabk.YabkProcess;
  * @author M.Allaudin
  */
 
-@SuppressWarnings("WeakerAccess")
 @YabkProcess(methods = Methods.ACCESSORS)
 public abstract class Person {
 
