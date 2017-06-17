@@ -1,7 +1,7 @@
 package io.github.allaudin.yabk;
 
 /**
- * Created on 6/17/17.
+ * Utility class for YABK processor.
  *
  * @author M.Allaudin
  */
@@ -12,6 +12,13 @@ public final class Utils {
         throw new AssertionError("Can't instantiate " + Utils.class.getSimpleName());
     }
 
+
+    /**
+     * Get class name from given type
+     *
+     * @param type type of field
+     * @return string - class name without package if it fully qualified name, same name otherwise
+     */
     public static String getClassName(String type) {
         if (type.contains(".")) {
             return type.substring(type.lastIndexOf(".") + 1);
@@ -19,6 +26,12 @@ public final class Utils {
         return type;
     } // getName
 
+    /**
+     * Get package name from given type
+     *
+     * @param type type of field
+     * @return string - package name if available, same field otherwise
+     */
     public static String getPackage(String type) {
         if (type.contains(".")) {
             return type.substring(0, type.lastIndexOf("."));
