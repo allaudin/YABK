@@ -157,6 +157,9 @@ public final class ClassModel {
             case "float":
                 format = "this.$N = in.readFloat()";
                 break;
+            case "String":
+                format = "this.$N = in.readString()";
+                break;
             case "double":
                 format = "this.$N = in.readDouble()";
                 break;
@@ -190,6 +193,9 @@ public final class ClassModel {
                 break;
             case "float":
                 format = " dest.writeFloat($N)";
+                break;
+            case "String":
+                format = " dest.writeString($N)";
                 break;
             case "double":
                 format = " dest.writeDouble($N)";
