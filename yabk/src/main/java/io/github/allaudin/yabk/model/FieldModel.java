@@ -27,6 +27,13 @@ class FieldModel {
         this.fieldName = fieldName;
     }
 
+    public String getFieldName() {
+        return fieldName;
+    }
+
+    public String getFieldType() {
+        return fieldType;
+    }
 
     MethodSpec getMutator() {
         MethodSpec.Builder builder = MethodSpec.methodBuilder("set" + getCapitalizedString(fieldName));
