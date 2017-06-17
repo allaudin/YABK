@@ -32,6 +32,8 @@ import java.lang.annotation.Target;
  * <p><b>Note 2:</b> {@link YabkProcess} annotation on <em>non-abstract</em> classes is simple ignored. No class is generated
  * for non-abstract classes.</p>
  *
+ * <p>Abstract class must have a no-arg public or protected constructor.</p>
+ *
  * @author M.Allaudin
  */
 
