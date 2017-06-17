@@ -62,5 +62,5 @@ public @interface YabkProcess {
      * @return true - to convert null strings to empty, false otherwise
      */
     boolean nonNullStrings() default false;
-    
+
 }

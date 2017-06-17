@@ -9,7 +9,7 @@ import io.github.allaudin.yabk.YabkProcess;
  */
 
 @SuppressWarnings("WeakerAccess")
-@YabkProcess
+@YabkProcess(nonNullStrings = true)
 public abstract class $UserModel {
     protected String name;
     protected int id;

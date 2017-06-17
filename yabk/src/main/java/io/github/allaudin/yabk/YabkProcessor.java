@@ -14,7 +14,7 @@ import javax.lang.model.element.TypeElement;
 import javax.tools.Diagnostic;
 
 import io.github.allaudin.yabk.generator.ClassGenerator;
-import io.github.allaudin.yabk.generator.ClassMetaModel;
+import io.github.allaudin.yabk.generator.ClassMeta;
 
 public class YabkProcessor extends AbstractProcessor {
 
@@ -41,7 +41,7 @@ public class YabkProcessor extends AbstractProcessor {
 
             note("Processing %s", e.toString());
 
-            ClassGenerator classGenerator = new ClassGenerator(new ClassMetaModel(type));
+            ClassGenerator classGenerator = new ClassGenerator(new ClassMeta(type));
 
             List<? extends Element> enclosedElements = type.getEnclosedElements();
 

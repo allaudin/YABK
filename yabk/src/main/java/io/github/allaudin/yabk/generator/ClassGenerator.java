@@ -27,10 +27,10 @@ import io.github.allaudin.yabk.Utils;
 public final class ClassGenerator {
 
     private Set<FieldGenerator> fields;
-    private ClassMetaModel classMeta;
+    private ClassMeta classMeta;
 
 
-    public ClassGenerator(ClassMetaModel classMeta) {
+    public ClassGenerator(ClassMeta classMeta) {
         this.classMeta = classMeta;
         fields = new HashSet<>();
     }

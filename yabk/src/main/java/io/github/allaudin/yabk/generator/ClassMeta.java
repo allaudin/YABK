@@ -7,12 +7,12 @@ import io.github.allaudin.yabk.Utils;
 import io.github.allaudin.yabk.YabkProcess;
 
 /**
- * Created on 6/17/17.
+ * Information about class to be generated.
  *
  * @author M.Allaudin
  */
 
-public class ClassMetaModel {
+public class ClassMeta {
 
     private String className;
     private String classPackage;
@@ -21,7 +21,7 @@ public class ClassMetaModel {
 
     private boolean nonNullStrings;
 
-    public ClassMetaModel(TypeElement e) {
+    public ClassMeta(TypeElement e) {
         String type = e.getQualifiedName().toString();
         parentClass = Utils.getClassName(type);
         classPackage = Utils.getPackage(type);
@@ -35,7 +35,7 @@ public class ClassMetaModel {
 
         methods = yabkProcess.methods();
         nonNullStrings = yabkProcess.nonNullStrings();
-    } // ClassMetaModel
+    } // ClassMeta
 
     private String cleanClassName(String className) {
         return className.charAt(0) == "$".charAt(0) ? className.replaceFirst("\\$", "") : "Yabk" + className;
@@ -60,4 +60,4 @@ public class ClassMetaModel {
     boolean nonNullStrings() {
         return nonNullStrings;
     }
-} // ClassMetaModel
+} // ClassMeta
