@@ -12,9 +12,17 @@ import io.github.allaudin.yabk.YabkProcess;
 @YabkProcess
 public abstract class $UserModel {
     protected String name;
-    protected int i;
-    protected long no;
-    protected String balance;
-    protected byte flag;
-    protected Integer num;
+    protected int id;
+    protected String phone;
+    protected boolean isMarried;
+
+    @Override
+    public String toString() {
+        return "{" +
+                "name='" + name + '\'' +
+                ", id=" + id +
+                ", phone='" + phone + '\'' +
+                ", isMarried=" + isMarried +
+                '}';
+    }
 }

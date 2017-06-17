@@ -62,6 +62,8 @@ public final class ClassGenerator {
 
         clazzBuilder.addModifiers(Modifier.PUBLIC);
 
+        clazzBuilder.addMethod(MethodSpec.constructorBuilder().addModifiers(Modifier.PUBLIC).build());
+
         boolean nonNullString = classMeta.nonNullStrings();
         boolean mutatorOnly = classMeta.getMethods() == Methods.MUTATORS;
         boolean accessorOnly = classMeta.getMethods() == Methods.ACCESSORS;
@@ -111,7 +113,7 @@ public final class ClassGenerator {
     } // writeTo
 
 
-    private FieldSpec getCreateField(){
+    private FieldSpec getCreateField() {
 
         ClassName creator = ClassName.get("android.os.Parcelable", "Creator");
         ClassName creatorParamType = ClassName.get(classMeta.getClassPackage(), classMeta.getClassName());
