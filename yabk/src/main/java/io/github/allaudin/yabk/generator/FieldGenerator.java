@@ -15,8 +15,19 @@ import javax.lang.model.element.Modifier;
 
 class FieldGenerator {
 
+    /**
+     * Package name of this field
+     */
     private String packageName;
+
+    /**
+     * Field name of this field
+     */
     private String fieldName;
+
+    /**
+     * Type of this field
+     */
     private String fieldType;
 
     void setPackageName(String packageName) {
