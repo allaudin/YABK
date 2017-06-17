@@ -21,10 +21,10 @@ import io.github.allaudin.yabk.Utils;
 public final class ClassModel {
 
     private Set<FieldModel> fields;
-    private ClassMeta classMeta;
+    private ClassMetaModel classMeta;
 
 
-    public ClassModel(ClassMeta classMeta) {
+    public ClassModel(ClassMetaModel classMeta) {
         this.classMeta = classMeta;
         fields = new HashSet<>();
     }

@@ -14,7 +14,7 @@ import javax.lang.model.element.Modifier;
 import javax.lang.model.element.TypeElement;
 import javax.tools.Diagnostic;
 
-import io.github.allaudin.yabk.model.ClassMeta;
+import io.github.allaudin.yabk.model.ClassMetaModel;
 import io.github.allaudin.yabk.model.ClassModel;
 
 @SupportedSourceVersion(SourceVersion.RELEASE_7)
@@ -45,7 +45,7 @@ public class YabkProcessor extends AbstractProcessor {
 
             List<? extends Element> enclosedElements = type.getEnclosedElements();
 
-            ClassModel classModel = new ClassModel(new ClassMeta(type));
+            ClassModel classModel = new ClassModel(new ClassMetaModel(type));
 
 
             for (Element ee : enclosedElements) {

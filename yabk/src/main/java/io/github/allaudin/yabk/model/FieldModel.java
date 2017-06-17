@@ -13,17 +13,17 @@ import javax.lang.model.element.Modifier;
  * @author M.Allaudin
  */
 
-public class FieldModel {
+class FieldModel {
 
     private String packageName;
     private String fieldName;
     private String fieldType;
 
-    public void setPackageName(String packageName) {
+    void setPackageName(String packageName) {
         this.packageName = packageName;
     }
 
-    public void setFieldName(String fieldName) {
+    void setFieldName(String fieldName) {
         this.fieldName = fieldName;
     }
 
@@ -43,7 +43,7 @@ public class FieldModel {
         return result;
     }
 
-    public MethodSpec getMutator() {
+    MethodSpec getMutator() {
         MethodSpec.Builder builder = MethodSpec.methodBuilder("set" + getCapitalizedString(fieldName));
 
         if (isPrimitive()) {
@@ -60,10 +60,11 @@ public class FieldModel {
         return builder.build();
     } // getMutator
 
-    private String getCapitalizedString(String string){
+    private String getCapitalizedString(String string) {
         return string.substring(0, 1).toUpperCase() + string.substring(1);
     }
-    public MethodSpec getAccessor() {
+
+    MethodSpec getAccessor() {
         MethodSpec.Builder builder = MethodSpec.methodBuilder("get" + getCapitalizedString(fieldName));
 
         if (isPrimitive()) {
@@ -73,10 +74,10 @@ public class FieldModel {
             ClassName clazz = ClassName.get(packageName, fieldType);
 
             // TODO: 6/17/17 pass it via annotation
-            if(fieldType.equals("String")){
+            if (fieldType.equals("String")) {
                 String format = "return this.$1N == null? $2S: this.$1N ";
                 builder.addStatement(format, fieldName, "");
-            }else {
+            } else {
                 builder.addStatement("return this.$1N = $1N", fieldName);
             }
             builder.returns(clazz);
@@ -111,22 +112,11 @@ public class FieldModel {
     private boolean isPrimitive() {
         return packageName == null || packageName.length() == 0;
     }
-
-    public String getFieldType() {
-        return fieldType;
-    }
-
-    public void setFieldType(String fieldType) {
+    
+    void setFieldType(String fieldType) {
         this.fieldType = fieldType;
     }
 
-    public String getPackageName() {
-        return packageName;
-    }
-
-    public String getFieldName() {
-        return fieldName;
-    }
 
     @Override
     public String toString() {

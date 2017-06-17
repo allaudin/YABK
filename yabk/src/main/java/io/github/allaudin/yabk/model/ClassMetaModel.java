@@ -11,13 +11,13 @@ import io.github.allaudin.yabk.YabkProcess;
  * @author M.Allaudin
  */
 
-public class ClassMeta {
+public class ClassMetaModel {
 
     private String className;
     private String classPackage;
     private String parentClass;
 
-    public ClassMeta(TypeElement e) {
+    public ClassMetaModel(TypeElement e) {
         String type = e.getQualifiedName().toString();
         parentClass = Utils.getClassName(type);
         classPackage = Utils.getPackage(type);
@@ -34,15 +34,15 @@ public class ClassMeta {
         return className.charAt(0) == "$".charAt(0) ? className.replaceFirst("\\$", "") : "Yabk" + className;
     } // cleanClassName
 
-    public String getClassName() {
+    String getClassName() {
         return className;
     }
 
-    public String getClassPackage() {
+    String getClassPackage() {
         return classPackage;
     }
 
-    public String getParentClass() {
+    String getParentClass() {
         return parentClass;
     }
-} // ClassMeta
+} // ClassMetaModel
