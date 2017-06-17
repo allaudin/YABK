@@ -31,13 +31,15 @@ public class YabkProcessor extends AbstractProcessor {
 
         for (Element e : roundEnvironment.getElementsAnnotatedWith(YabkProcess.class)) {
 
+            TypeElement type = (TypeElement) e;
+
             if (!e.getModifiers().contains(Modifier.ABSTRACT) || e.getKind() != ElementKind.CLASS) {
-                note("Skipping %s  [%s]", e.getKind(), e.getSimpleName());
+                note("Skipping %s  [%s]", e.getKind(), ((TypeElement) e).getQualifiedName().toString());
                 continue;
             }
             note("Processing %s", e.toString());
 
-            TypeElement type = (TypeElement) e;
+
             List<? extends Element> enclosedElements = type.getEnclosedElements();
 
             ClassModel classModel = new ClassModel(type.getQualifiedName().toString());
