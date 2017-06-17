@@ -14,6 +14,7 @@ import javax.lang.model.element.Modifier;
 import javax.lang.model.element.TypeElement;
 import javax.tools.Diagnostic;
 
+import io.github.allaudin.yabk.model.ClassMeta;
 import io.github.allaudin.yabk.model.ClassModel;
 
 @SupportedSourceVersion(SourceVersion.RELEASE_7)
@@ -33,16 +34,18 @@ public class YabkProcessor extends AbstractProcessor {
 
             TypeElement type = (TypeElement) e;
 
+            // should be abstract class
             if (!e.getModifiers().contains(Modifier.ABSTRACT) || e.getKind() != ElementKind.CLASS) {
-                note("Skipping %s  [%s]", e.getKind(), ((TypeElement) e).getQualifiedName().toString());
+                note("Skipping %s  [%s]", e.getKind(), type.getQualifiedName().toString());
                 continue;
             }
+
             note("Processing %s", e.toString());
 
 
             List<? extends Element> enclosedElements = type.getEnclosedElements();
 
-            ClassModel classModel = new ClassModel(type.getQualifiedName().toString());
+            ClassModel classModel = new ClassModel(new ClassMeta(type));
 
 
             for (Element ee : enclosedElements) {

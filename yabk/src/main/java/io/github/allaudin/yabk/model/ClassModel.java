@@ -10,6 +10,8 @@ import java.util.Set;
 
 import javax.lang.model.element.Modifier;
 
+import io.github.allaudin.yabk.Utils;
+
 /**
  * Created on 6/16/17.
  *
@@ -18,57 +20,41 @@ import javax.lang.model.element.Modifier;
 
 public final class ClassModel {
 
-
-    // type-field name
     private Set<FieldModel> fields;
+    private ClassMeta classMeta;
 
-    private String className;
-    private String classPackage;
-    private String parentClass;
 
-    public ClassModel(String className) {
-        this.parentClass = getName(className);
-        this.classPackage = getPackage(className);
-        this.className = cleanClassName(getName(className));
+    public ClassModel(ClassMeta classMeta) {
+        this.classMeta = classMeta;
         fields = new HashSet<>();
     }
 
-    private String cleanClassName(String className) {
-        return className.charAt(0) == "$".charAt(0) ? className.replaceFirst("\\$", "") : "Yabk" + className;
-    } // cleanClassName
 
     public void add(String type, String field) {
 
         final FieldModel fieldModel = new FieldModel();
         fieldModel.setFieldName(field);
         if (!type.contains(".")) {
-            fieldModel.setFieldType(getName(type));
+            fieldModel.setFieldType(Utils.getClassName(type));
         } else {
-            fieldModel.setPackageName(getPackage(type));
-            fieldModel.setFieldType(getName(type));
+            fieldModel.setPackageName(Utils.getPackage(type));
+            fieldModel.setFieldType(Utils.getClassName(type));
         }
         fields.add(fieldModel);
     }
 
-    private String getPackage(String type) {
-        return type.substring(0, type.lastIndexOf("."));
-    }
-
-    private String getName(String type) {
-        return type.substring(type.lastIndexOf(".") + 1);
-    }
 
     public JavaFile getFile() {
 
-        TypeSpec.Builder clazzBuilder = TypeSpec.classBuilder(className);
-        clazzBuilder.superclass(ClassName.get(classPackage, parentClass));
+        TypeSpec.Builder clazzBuilder = TypeSpec.classBuilder(classMeta.getClassName());
+        clazzBuilder.superclass(ClassName.get(classMeta.getClassPackage(), classMeta.getParentClass()));
         clazzBuilder.addModifiers(Modifier.PUBLIC);
         for (FieldModel field : fields) {
             clazzBuilder.addMethod(field.getAccessor());
             clazzBuilder.addMethod(field.getMutator());
         }
 
-        return JavaFile.builder(classPackage, clazzBuilder.build()).build();
+        return JavaFile.builder(classMeta.getClassPackage(), clazzBuilder.build()).build();
 
     } // writeTo
 

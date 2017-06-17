@@ -9,7 +9,7 @@ import io.github.allaudin.yabk.YabkProcess;
  */
 
 @SuppressWarnings("WeakerAccess")
-@YabkProcess
+@YabkProcess(genClassName = "MyPerson")
 public abstract class Person {
     protected boolean name;
     protected byte id;
