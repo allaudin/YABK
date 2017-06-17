@@ -1,5 +1,6 @@
 package allaudin.github.io.yabkprocessor.model;
 
+import io.github.allaudin.yabk.Methods;
 import io.github.allaudin.yabk.YabkProcess;
 
 /**
@@ -9,7 +10,7 @@ import io.github.allaudin.yabk.YabkProcess;
  */
 
 @SuppressWarnings("WeakerAccess")
-@YabkProcess(nonNullStrings = true)
+@YabkProcess(methods = Methods.ACCESSORS)
 public abstract class Person {
 
     protected String father;

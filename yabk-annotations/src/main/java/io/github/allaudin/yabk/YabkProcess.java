@@ -47,12 +47,17 @@ public @interface YabkProcess {
      */
     String className() default "";
 
+    /**
+     * Types of methods to be generated. Getter or setters or both.
+     *
+     * @return type of methods - default BOTH
+     */
     Methods methods() default Methods.BOTH;
 
+    /**
+     * Convert null strings into empty strings.
+     *
+     * @return true - to convert null strings to empty, false otherwise
+     */
     boolean nonNullStrings() default false;
-
-    // TODO: 6/17/17 check if class if final - skip in this case 
-    // TODO: 6/17/17 check if fields are package private or not 
-    // TODO: 6/17/17 check if annotation is declared on class or not 
-    // TODO: 6/17/17 add annotations like setteronly, getteronly or skip anno for fields.
 }
