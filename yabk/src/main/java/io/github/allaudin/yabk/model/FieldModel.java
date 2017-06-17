@@ -74,7 +74,7 @@ class FieldModel {
             ClassName clazz = ClassName.get(packageName, fieldType);
 
             if (nonNullString && fieldType.equals("String")) {
-                String format = "return this.$1N == null? $2S: this.$1N ";
+                String format = "return this.$1N == null? $2S: this.$1N";
                 builder.addStatement(format, fieldName, "");
             } else {
                 builder.addStatement("return this.$1N = $1N", fieldName);
