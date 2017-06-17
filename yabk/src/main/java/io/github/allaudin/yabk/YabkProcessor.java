@@ -24,7 +24,7 @@ public class YabkProcessor extends AbstractProcessor {
 
         // round completed
         if (roundEnvironment.processingOver()) {
-            note("%s", "YABK round completed");
+            note("%s", "YABK round completed [200]");
             return true;
         }
 
@@ -56,10 +56,9 @@ public class YabkProcessor extends AbstractProcessor {
                 classModel.getFile().writeTo(processingEnv.getFiler());
             } catch (Exception ioe) {
                 ioe.printStackTrace();
-                error("%s", "Error while writing file.");
+                error("%s", "Error while writing file [500]");
             }
-            
-            note("Processed - %s", classModel.toString());
+
         } // end for
 
 
@@ -67,11 +66,11 @@ public class YabkProcessor extends AbstractProcessor {
     } // process
 
     private void note(String format, Object... objects) {
-        processingEnv.getMessager().printMessage(Diagnostic.Kind.NOTE, String.format(format + " ...", objects));
+        processingEnv.getMessager().printMessage(Diagnostic.Kind.NOTE, String.format(format + " ...\n\n", objects));
     }
 
     private void error(String format, Object... objects) {
-        processingEnv.getMessager().printMessage(Diagnostic.Kind.ERROR, String.format(format + " ...", objects));
+        processingEnv.getMessager().printMessage(Diagnostic.Kind.ERROR, String.format(format + " ...\n\n", objects));
     }
 
     @Override
