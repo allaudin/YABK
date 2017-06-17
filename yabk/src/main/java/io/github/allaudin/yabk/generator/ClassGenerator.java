@@ -68,11 +68,11 @@ public final class ClassGenerator {
         boolean mutatorOnly = classMeta.getMethods() == Methods.MUTATORS;
         boolean accessorOnly = classMeta.getMethods() == Methods.ACCESSORS;
 
-        MethodSpec.Builder parcelConstructor = MethodSpec.constructorBuilder().addModifiers(Modifier.PROTECTED)
+        MethodSpec.Builder parcelReadConstructor = MethodSpec.constructorBuilder().addModifiers(Modifier.PROTECTED)
                 .addParameter(parcel, "in");
 
 
-        MethodSpec.Builder parcelWrite = MethodSpec.methodBuilder("writeToParcel")
+        MethodSpec.Builder parcelWriter = MethodSpec.methodBuilder("writeToParcel")
                 .addModifiers(Modifier.PUBLIC)
                 .returns(void.class)
                 .addAnnotation(Override.class)
@@ -82,8 +82,8 @@ public final class ClassGenerator {
 
         for (FieldGenerator field : fields) {
 
-            addParcelStatements(parcelWrite, field, false);
-            addParcelStatements(parcelConstructor, field, true);
+            addParcelStatements(parcelWriter, field, false);
+            addParcelStatements(parcelReadConstructor, field, true);
 
             if (mutatorOnly) {
                 clazzBuilder.addMethod(field.getMutator());
@@ -103,8 +103,8 @@ public final class ClassGenerator {
                 .addStatement("return $L", 0);
 
         // add parcel methods
-        clazzBuilder.addMethod(parcelConstructor.build());
-        clazzBuilder.addMethod(parcelWrite.build());
+        clazzBuilder.addMethod(parcelReadConstructor.build());
+        clazzBuilder.addMethod(parcelWriter.build());
         clazzBuilder.addMethod(describeContents.build());
         clazzBuilder.addField(getParcelCreateField());
 
