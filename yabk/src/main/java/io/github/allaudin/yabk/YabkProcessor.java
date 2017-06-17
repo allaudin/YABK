@@ -56,7 +56,7 @@ public class YabkProcessor extends AbstractProcessor {
                 classModel.getFile().writeTo(processingEnv.getFiler());
             } catch (Exception ioe) {
                 ioe.printStackTrace();
-                error("%s", "Error while writing file [500]");
+                error(e, "%s", "Error while writing file [500]");
             }
 
         } // end for
@@ -69,8 +69,8 @@ public class YabkProcessor extends AbstractProcessor {
         processingEnv.getMessager().printMessage(Diagnostic.Kind.NOTE, String.format(format + " ...\n\n", objects));
     }
 
-    private void error(String format, Object... objects) {
-        processingEnv.getMessager().printMessage(Diagnostic.Kind.ERROR, String.format(format + " ...\n\n", objects));
+    private void error(Element e, String format, Object... objects) {
+        processingEnv.getMessager().printMessage(Diagnostic.Kind.ERROR, String.format(format + " ...\n\n", objects), e);
     }
 
     @Override
