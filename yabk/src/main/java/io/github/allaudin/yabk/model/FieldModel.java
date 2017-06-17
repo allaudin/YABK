@@ -27,21 +27,6 @@ class FieldModel {
         this.fieldName = fieldName;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        FieldModel that = (FieldModel) o;
-        return packageName != null ? packageName.equals(that.packageName) : that.packageName == null && fieldName.equals(that.fieldName);
-
-    }
-
-    @Override
-    public int hashCode() {
-        int result = packageName != null ? packageName.hashCode() : 0;
-        result = 31 * result + fieldName.hashCode();
-        return result;
-    }
 
     MethodSpec getMutator() {
         MethodSpec.Builder builder = MethodSpec.methodBuilder("set" + getCapitalizedString(fieldName));

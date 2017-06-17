@@ -77,11 +77,11 @@ public class YabkProcessor extends AbstractProcessor {
     } // processField
 
     private void note(String format, Object... objects) {
-        processingEnv.getMessager().printMessage(Diagnostic.Kind.NOTE, String.format(format + " ...\n\n", objects));
+        processingEnv.getMessager().printMessage(Diagnostic.Kind.NOTE, String.format(format + " ...", objects));
     }
 
     private void error(Element e, String format, Object... objects) {
-        processingEnv.getMessager().printMessage(Diagnostic.Kind.ERROR, String.format(format + " ...\n\n", objects), e);
+        processingEnv.getMessager().printMessage(Diagnostic.Kind.ERROR, String.format(format + " ...", objects), e);
     }
 
     @Override
