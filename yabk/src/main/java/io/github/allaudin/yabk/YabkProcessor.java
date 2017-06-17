@@ -32,21 +32,21 @@ public class YabkProcessor extends AbstractProcessor {
 
         for (Element e : roundEnvironment.getElementsAnnotatedWith(YabkProcess.class)) {
 
-            TypeElement type = (TypeElement) e;
 
-            // should be abstract class
-            if (!e.getModifiers().contains(Modifier.ABSTRACT) || e.getKind() != ElementKind.CLASS) {
-                note("Skipping %s  [%s]", e.getKind(), type.getQualifiedName().toString());
+            boolean shouldSkip = !e.getModifiers().contains(Modifier.ABSTRACT) || e.getKind() != ElementKind.CLASS;
+
+            if (shouldSkip) {
+                note("Skipping %s  [%s]", e.getKind(), e.getSimpleName());
                 continue;
             }
 
+            TypeElement type = (TypeElement) e;
+
             note("Processing %s", e.toString());
-
-
-            List<? extends Element> enclosedElements = type.getEnclosedElements();
 
             ClassModel classModel = new ClassModel(new ClassMetaModel(type));
 
+            List<? extends Element> enclosedElements = type.getEnclosedElements();
 
             for (Element ee : enclosedElements) {
                 processField(classModel, ee);
