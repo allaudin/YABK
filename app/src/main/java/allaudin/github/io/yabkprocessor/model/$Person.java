@@ -9,8 +9,6 @@ import io.github.allaudin.yabk.YabkProcess;
  */
 
 @YabkProcess
-public abstract class $Person {
-    protected String name;
-    protected int id;
-    protected String family;
+abstract class $Person {
+     int modelId;
 }

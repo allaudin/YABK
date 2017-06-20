@@ -31,7 +31,7 @@ public class YabkProcessor extends AbstractProcessor {
         for (Element e : roundEnvironment.getElementsAnnotatedWith(YabkProcess.class)) {
 
 
-            boolean shouldSkip = !e.getModifiers().contains(Modifier.ABSTRACT) || e.getKind() != ElementKind.CLASS;
+            boolean shouldSkip = !e.getModifiers().contains(Modifier.ABSTRACT) || !e.getKind().isClass();
 
             if (shouldSkip) {
                 note("Skipping %s  [%s]", e.getKind(), e.getSimpleName());
@@ -71,7 +71,7 @@ public class YabkProcessor extends AbstractProcessor {
     private void processField(ClassGenerator classGenerator, Element ee) {
 
         boolean isNotSkipped = ee.getAnnotation(YabkSkip.class) == null;
-        boolean isProtected = ee.getModifiers().contains(Modifier.PROTECTED);
+        boolean isProtected = ee.getModifiers().contains(Modifier.PROTECTED) || ee.getModifiers().isEmpty();
         boolean isField = ee.getKind() == ElementKind.FIELD;
 
         if (isField && isProtected && isNotSkipped) {

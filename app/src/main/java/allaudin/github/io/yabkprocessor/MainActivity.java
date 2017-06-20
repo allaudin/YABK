@@ -6,6 +6,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 
 import allaudin.github.io.yabkprocessor.model.UserModel;
+import allaudin.github.io.yabkprocessor.some.B;
 
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
@@ -16,6 +17,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         setContentView(R.layout.activity_main);
         findViewById(R.id.send).setOnClickListener(this);
 
+        B b = new B();
     }
 
     @Override
