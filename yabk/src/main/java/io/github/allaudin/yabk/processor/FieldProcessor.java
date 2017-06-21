@@ -38,6 +38,7 @@ public class FieldProcessor {
         model.setPrimitive(isPrimitive());
         model.setFieldType(getFieldType());
         model.setPackageName(getPackage());
+        model.setFieldName(element.getSimpleName().toString());
 
         return model;
     } // process
