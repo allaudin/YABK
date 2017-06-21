@@ -13,6 +13,8 @@ import io.github.allaudin.yabk.YabkProcess;
 @YabkProcess
 abstract class $Person {
     String name;
+    boolean isMarried;
+    byte myBtye;
     List<String> parents;
 
 }
