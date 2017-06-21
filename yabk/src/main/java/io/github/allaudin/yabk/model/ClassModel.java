@@ -3,17 +3,39 @@ package io.github.allaudin.yabk.model;
 import io.github.allaudin.yabk.Methods;
 
 /**
- * Created on 6/21/17.
+ * Model for class type
  *
  * @author M.Allaudin
  */
 
 public class ClassModel {
 
+    /**
+     * Stores type of methods to be generated for  this class
+     */
     private Methods methods;
+
+    /**
+     * Classname of generated class
+     */
     private String className;
+
+    /**
+     * Parent class of generated class
+     */
     private String parentClass;
+
+    /**
+     * Package name for generated class
+     */
     private String classPackage;
+
+    /**
+     * Either to add non-null check on strings or not.
+     * <p>
+     * If true, all strings will be checked for null type and if any string is null, empty string is returned
+     * from accessor.
+     */
     private boolean nonNullStrings;
 
     public Methods getMethods() {

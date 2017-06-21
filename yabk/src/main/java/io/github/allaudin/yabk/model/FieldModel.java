@@ -9,7 +9,13 @@ package io.github.allaudin.yabk.model;
 public class FieldModel {
 
     /**
-     * Either <em>this field</em> should be added to generated class or not
+     * Either <em>this field</em> should be added to generated class or not.
+     * <p>
+     * <b>Note:</b> Processor may through exception if a field which is not supposed to add is added.
+     * <p>
+     * Always check this while adding field to class.
+     *
+     * @see io.github.allaudin.yabk.generator.ClassGenerator#add(FieldModel)
      */
     private boolean shouldBeAdded;
 
