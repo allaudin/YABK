@@ -76,6 +76,7 @@ public final class ClassGenerator {
         for (FieldModel field : fields) {
 
             if (field.isPrimitive() || field.isParcelable()) {
+                // TODO: 6/21/17 what if parcelable class is abstract, it will not have CREATE field. 
                 addWriteParcel(parcelWriteBuilder, field);
                 addReadParcel(parcelReadBuilder, field);
             }
