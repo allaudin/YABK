@@ -15,7 +15,8 @@ import java.util.Set;
 import javax.lang.model.element.Modifier;
 
 import io.github.allaudin.yabk.Methods;
-import io.github.allaudin.yabk.Utils;
+import io.github.allaudin.yabk.model.ClassModel;
+import io.github.allaudin.yabk.model.FieldModel;
 
 /**
  * Generates class from given fields and meta data.
@@ -25,30 +26,20 @@ import io.github.allaudin.yabk.Utils;
 
 public final class ClassGenerator {
 
-    private Set<FieldGenerator> fields;
-    private ClassMeta classMeta;
+    private Set<FieldModel> fields;
+    private ClassModel classModel;
+    private FieldGenerator fieldGenerator;
 
 
-    public ClassGenerator(ClassMeta classMeta) {
-        this.classMeta = classMeta;
+    public ClassGenerator(ClassModel classModel, FieldGenerator fieldGenerator) {
+        this.fieldGenerator = fieldGenerator;
+        this.classModel = classModel;
         fields = new HashSet<>();
     }
 
 
-    public void add(String type, String field, boolean isPrimitive) {
-
-        final FieldGenerator fieldGenerator = new FieldGenerator();
-        fieldGenerator.setFieldName(field);
-        fieldGenerator.setPrimitive(isPrimitive);
-
-        if (isPrimitive) {
-            fieldGenerator.setFieldType(type);
-        } else {
-            String typeName = Utils.getClassName(type);
-            fieldGenerator.setPackageName(Utils.getPackage(type));
-            fieldGenerator.setFieldType(typeName);
-        }
-        fields.add(fieldGenerator);
+    public void add(FieldModel fieldModel) {
+        fields.add(fieldModel);
     }
 
 
@@ -60,15 +51,15 @@ public final class ClassGenerator {
 
         MethodSpec noArgConstructor = MethodSpec.constructorBuilder().addModifiers(Modifier.PUBLIC).build();
 
-        TypeSpec.Builder clazzBuilder = TypeSpec.classBuilder(classMeta.getClassName());
-        clazzBuilder.superclass(ClassName.get(classMeta.getClassPackage(), classMeta.getParentClass()))
+        TypeSpec.Builder clazzBuilder = TypeSpec.classBuilder(classModel.getClassName());
+        clazzBuilder.superclass(ClassName.get(classModel.getClassPackage(), classModel.getParentClass()))
                 .addSuperinterface(parcelable)
                 .addModifiers(Modifier.PUBLIC)
                 .addMethod(noArgConstructor);
 
-        boolean nonNullString = classMeta.nonNullStrings();
-        boolean mutatorOnly = classMeta.getMethods() == Methods.MUTATORS;
-        boolean accessorOnly = classMeta.getMethods() == Methods.ACCESSORS;
+        boolean nonNullString = classModel.isNonNullStrings();
+        boolean mutatorOnly = classModel.getMethods() == Methods.MUTATORS;
+        boolean accessorOnly = classModel.getMethods() == Methods.ACCESSORS;
 
         MethodSpec.Builder parcelReadConstructor = MethodSpec.constructorBuilder().addModifiers(Modifier.PROTECTED)
                 .addParameter(parcel, "in");
@@ -82,18 +73,18 @@ public final class ClassGenerator {
                 .addParameter(int.class, "flags");
 
 
-        for (FieldGenerator field : fields) {
+        for (FieldModel field : fields) {
 
             addParcelStatements(parcelWriter, field, false);
             addParcelStatements(parcelReadConstructor, field, true);
 
             if (mutatorOnly) {
-                clazzBuilder.addMethod(field.getMutator());
+                clazzBuilder.addMethod(fieldGenerator.getMutator(field));
             } else if (accessorOnly) {
-                clazzBuilder.addMethod(field.getAccessor(nonNullString));
+                clazzBuilder.addMethod(fieldGenerator.getAccessor(field, nonNullString));
             } else {
-                clazzBuilder.addMethod(field.getMutator());
-                clazzBuilder.addMethod(field.getAccessor(nonNullString));
+                clazzBuilder.addMethod(fieldGenerator.getMutator(field));
+                clazzBuilder.addMethod(fieldGenerator.getAccessor(field, nonNullString));
             }
         } // end for
 
@@ -110,7 +101,7 @@ public final class ClassGenerator {
         clazzBuilder.addMethod(describeContents.build());
         clazzBuilder.addField(getParcelCreateField());
 
-        return JavaFile.builder(classMeta.getClassPackage(), clazzBuilder.build()).build();
+        return JavaFile.builder(classModel.getClassPackage(), clazzBuilder.build()).build();
 
     } // writeTo
 
@@ -118,7 +109,7 @@ public final class ClassGenerator {
     private FieldSpec getParcelCreateField() {
 
         ClassName creator = ClassName.get("android.os.Parcelable", "Creator");
-        ClassName creatorParamType = ClassName.get(classMeta.getClassPackage(), classMeta.getClassName());
+        ClassName creatorParamType = ClassName.get(classModel.getClassPackage(), classModel.getClassName());
         TypeName creatorType = ParameterizedTypeName.get(creator, creatorParamType);
 
         CodeBlock block = CodeBlock.of("new Creator<$1N>() {\n" +
@@ -130,7 +121,7 @@ public final class ClassGenerator {
                 "        public $1N[] newArray(int size) {\n" +
                 "            return new $1N[size];\n" +
                 "        }\n" +
-                "    }", classMeta.getClassName());
+                "    }", classModel.getClassName());
 
         FieldSpec.Builder creatorFieldBuilder = FieldSpec.builder(creatorType, "CREATOR",
                 Modifier.PUBLIC, Modifier.STATIC, Modifier.FINAL)
@@ -140,7 +131,6 @@ public final class ClassGenerator {
     } // getParcelCreateField
 
 
-
     /**
      * Add parcelable statements
      *
@@ -148,7 +138,7 @@ public final class ClassGenerator {
      * @param field   parcelable field
      * @param read    true - if it is read statement, false if it is write.
      */
-    private void addParcelStatements(MethodSpec.Builder builder, FieldGenerator field, boolean read) {
+    private void addParcelStatements(MethodSpec.Builder builder, FieldModel field, boolean read) {
         String type = field.getFieldType();
         String name = field.getFieldName();
         String format = "";

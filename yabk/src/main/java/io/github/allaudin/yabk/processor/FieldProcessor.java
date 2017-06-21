@@ -55,7 +55,7 @@ public class FieldProcessor {
     }
 
     private String getPackage() {
-        return isPrimitive() ? "" : Utils.getPackage(element.asType().toString());
+        return isPrimitive() ? "" : isYabkGenerated() ? packageName : Utils.getPackage(element.asType().toString());
     }
 
     private boolean isPrimitive() {
@@ -64,11 +64,6 @@ public class FieldProcessor {
 
     private String getFieldType() {
         String fieldType = element.asType().toString();
-
-        if (isPrimitive()) {
-            return fieldType;
-        }
-
-        return isYabkGenerated() ? packageName + "." + fieldType : Utils.getClassName(fieldType);
+        return isPrimitive() ? fieldType : Utils.getClassName(fieldType);
     }
 } // FieldProcessor

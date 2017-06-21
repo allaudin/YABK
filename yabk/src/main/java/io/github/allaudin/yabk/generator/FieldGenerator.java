@@ -6,60 +6,36 @@ import com.squareup.javapoet.TypeName;
 
 import javax.lang.model.element.Modifier;
 
+import io.github.allaudin.yabk.model.FieldModel;
+
 /**
  * Stores information about field and generates getters/setters for the field (if asked)
  *
  * @author M.Allaudin
  */
 
-class FieldGenerator {
+public final class FieldGenerator {
 
-    /**
-     * Package name of this field
-     */
-    private String packageName;
 
-    /**
-     * Field name of this field
-     */
-    private String fieldName;
+    private static final FieldGenerator instance = new FieldGenerator();
 
-    /**
-     * Type of this field
-     */
-    private String fieldType;
-
-    /**
-     * Set if field type is primitive or not
-     */
-    private boolean isPrimitive;
-
-    void setPackageName(String packageName) {
-        this.packageName = packageName;
+    private FieldGenerator() {
     }
 
-    void setFieldName(String fieldName) {
-        this.fieldName = fieldName;
+    public static FieldGenerator getInstance() {
+        return instance;
     }
 
-    String getFieldName() {
-        return fieldName;
-    }
+    MethodSpec getMutator(FieldModel fieldModel) {
+        MethodSpec.Builder builder = MethodSpec.methodBuilder("set" + getCapitalizedString(fieldModel.getFieldName()));
 
-    String getFieldType() {
-        return fieldType;
-    }
-
-    MethodSpec getMutator() {
-        MethodSpec.Builder builder = MethodSpec.methodBuilder("set" + getCapitalizedString(fieldName));
-
-        if (isPrimitive()) {
-            builder.addParameter(getType(fieldType), fieldName);
-            builder.addStatement("this.$1N = $1N", fieldName);
+        if (fieldModel.isPrimitive()) {
+            builder.addParameter(getType(fieldModel.getFieldType()), fieldModel.getFieldName());
+            builder.addStatement("this.$1N = $1N", fieldModel.getFieldName());
         } else {
-            ClassName clazz = ClassName.get(packageName, fieldType);
-            builder.addParameter(clazz, fieldName);
-            builder.addStatement("this.$1N = $1N", fieldName);
+            ClassName clazz = ClassName.get(fieldModel.getPackageName(), fieldModel.getFieldType());
+            builder.addParameter(clazz, fieldModel.getFieldName());
+            builder.addStatement("this.$1N = $1N", fieldModel.getFieldName());
         }
 
         builder.addModifiers(Modifier.PUBLIC);
@@ -71,20 +47,20 @@ class FieldGenerator {
         return string.substring(0, 1).toUpperCase() + string.substring(1);
     }
 
-    MethodSpec getAccessor(boolean nonNullString) {
-        MethodSpec.Builder builder = MethodSpec.methodBuilder("get" + getCapitalizedString(fieldName));
+    MethodSpec getAccessor(FieldModel fieldModel, boolean nonNullString) {
+        MethodSpec.Builder builder = MethodSpec.methodBuilder("get" + getCapitalizedString(fieldModel.getFieldName()));
 
-        if (isPrimitive()) {
-            builder.addStatement("return this.$N", fieldName);
-            builder.returns(getType(fieldType));
+        if (fieldModel.isPrimitive()) {
+            builder.addStatement("return this.$N", fieldModel.getFieldName());
+            builder.returns(getType(fieldModel.getFieldType()));
         } else {
-            ClassName clazz = ClassName.get(packageName, fieldType);
+            ClassName clazz = ClassName.get(fieldModel.getPackageName(), fieldModel.getFieldType());
 
-            if (nonNullString && fieldType.equals("String")) {
+            if (nonNullString && fieldModel.getFieldType().equals("String")) {
                 String format = "return this.$1N == null? $2S: this.$1N";
-                builder.addStatement(format, fieldName, "");
+                builder.addStatement(format, fieldModel.getFieldName(), "");
             } else {
-                builder.addStatement("return this.$1N = $1N", fieldName);
+                builder.addStatement("return this.$1N = $1N", fieldModel.getFieldName());
             }
             builder.returns(clazz);
         }
@@ -114,17 +90,5 @@ class FieldGenerator {
         }
         throw new IllegalArgumentException("Unknown type " + name);
     } // getType
-
-    void setPrimitive(boolean primitive) {
-        isPrimitive = primitive;
-    }
-
-    private boolean isPrimitive() {
-        return isPrimitive;
-    }
-
-    void setFieldType(String fieldType) {
-        this.fieldType = fieldType;
-    }
 
 }

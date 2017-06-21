@@ -8,18 +8,19 @@ import javax.annotation.processing.AbstractProcessor;
 import javax.annotation.processing.RoundEnvironment;
 import javax.lang.model.SourceVersion;
 import javax.lang.model.element.Element;
-import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.Modifier;
 import javax.lang.model.element.TypeElement;
 import javax.tools.Diagnostic;
 
 import io.github.allaudin.yabk.generator.ClassGenerator;
-import io.github.allaudin.yabk.generator.ClassMeta;
+import io.github.allaudin.yabk.generator.FieldGenerator;
+import io.github.allaudin.yabk.model.ClassModel;
+import io.github.allaudin.yabk.model.FieldModel;
+import io.github.allaudin.yabk.processor.ClassProcessor;
+import io.github.allaudin.yabk.processor.FieldProcessor;
 
 public class YabkProcessor extends AbstractProcessor {
 
-
-    private String packageName;
 
     @Override
     public boolean process(Set<? extends TypeElement> set, RoundEnvironment roundEnvironment) {
@@ -45,14 +46,18 @@ public class YabkProcessor extends AbstractProcessor {
 
             note("Processing %s", e.toString());
 
-            packageName = Utils.getPackage(type.getQualifiedName().toString());
+            String packageName = Utils.getPackage(type.getQualifiedName().toString());
 
-            ClassGenerator classGenerator = new ClassGenerator(new ClassMeta(type));
+            ClassModel classModel = ClassProcessor.newInstance(type).process();
+            FieldGenerator fieldGenerator = FieldGenerator.getInstance();
+
+            ClassGenerator classGenerator = new ClassGenerator(classModel, fieldGenerator);
 
             List<? extends Element> enclosedElements = type.getEnclosedElements();
 
             for (Element ee : enclosedElements) {
-                processField(classGenerator, ee);
+                FieldModel fieldModel = FieldProcessor.newInstance(packageName, ee).process();
+                classGenerator.add(fieldModel);
             }
 
             try {
@@ -73,20 +78,6 @@ public class YabkProcessor extends AbstractProcessor {
         return SourceVersion.latestSupported();
     } // getSupportedSourceVersion
 
-    private void processField(ClassGenerator classGenerator, Element ee) {
-
-        boolean isNotSkipped = ee.getAnnotation(YabkSkip.class) == null;
-        boolean isProtected = ee.getModifiers().contains(Modifier.PROTECTED) || ee.getModifiers().isEmpty();
-        boolean isField = ee.getKind() == ElementKind.FIELD;
-        boolean isYabkGenerated = ee.getAnnotation(YabkGenerated.class) != null;
-
-        if (isField && isProtected && isNotSkipped) {
-            boolean isPrimitive = ee.asType().getKind().isPrimitive();
-            String fieldType = ee.asType().toString();
-            fieldType = isYabkGenerated ? packageName + "." + fieldType : fieldType;
-            classGenerator.add(fieldType, ee.getSimpleName().toString(), isPrimitive);
-        }
-    } // processField
 
     private void note(String format, Object... objects) {
         processingEnv.getMessager().printMessage(Diagnostic.Kind.NOTE, String.format(format + " ...", objects));

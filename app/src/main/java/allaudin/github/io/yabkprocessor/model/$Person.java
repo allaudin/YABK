@@ -1,6 +1,5 @@
 package allaudin.github.io.yabkprocessor.model;
 
-import io.github.allaudin.yabk.YabkGenerated;
 import io.github.allaudin.yabk.YabkProcess;
 
 /**
@@ -12,8 +11,6 @@ import io.github.allaudin.yabk.YabkProcess;
 @YabkProcess
 abstract class $Person {
     int modelId;
-    @YabkGenerated Zmodel zmodel;
-
     public $Person(){}
     protected $Person(String s){}
 }
