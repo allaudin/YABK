@@ -178,7 +178,8 @@ public final class ClassGenerator {
             ClassName typeName = ClassName.get(field.getPackageName(), field.getFieldType());
             builder.addStatement("this.$N = in.readParcelable($T.class.getClassLoader())", name, typeName);
 
-        } else if (format.length() > 0) {
+        }
+        if (format.length() > 0) {
             builder.addStatement(format, name);
         }
     } // addReadParcel
