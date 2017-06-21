@@ -19,7 +19,7 @@ import io.github.allaudin.yabk.model.ClassModel;
 import io.github.allaudin.yabk.model.FieldModel;
 
 /**
- * Generates class from given fields and meta data.
+ * Generates class from given fields.
  *
  * @author M.Allaudin
  */
