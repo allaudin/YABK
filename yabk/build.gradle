@@ -2,7 +2,6 @@ apply plugin: 'java'
 
 dependencies {
     compile project(":yabk-annotations")
-    compile 'com.google.code.gson:gson:2.8.1'
     compile 'com.squareup:javapoet:1.9.0'
 }
 

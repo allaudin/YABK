@@ -1,6 +1,5 @@
 package io.github.allaudin.yabk.generator;
 
-import com.google.gson.Gson;
 import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.CodeBlock;
 import com.squareup.javapoet.FieldSpec;
@@ -36,15 +35,18 @@ public final class ClassGenerator {
     }
 
 
-    public void add(String type, String field) {
+    public void add(String type, String field, boolean isPrimitive) {
 
         final FieldGenerator fieldGenerator = new FieldGenerator();
         fieldGenerator.setFieldName(field);
-        if (!type.contains(".")) {
-            fieldGenerator.setFieldType(Utils.getClassName(type));
+        fieldGenerator.setPrimitive(isPrimitive);
+
+        if (isPrimitive) {
+            fieldGenerator.setFieldType(type);
         } else {
+            String typeName = Utils.getClassName(type);
             fieldGenerator.setPackageName(Utils.getPackage(type));
-            fieldGenerator.setFieldType(Utils.getClassName(type));
+            fieldGenerator.setFieldType(typeName);
         }
         fields.add(fieldGenerator);
     }
@@ -137,6 +139,8 @@ public final class ClassGenerator {
 
     } // getParcelCreateField
 
+
+
     /**
      * Add parcelable statements
      *
@@ -180,9 +184,4 @@ public final class ClassGenerator {
         }
     } // addParcelStatements
 
-
-    @Override
-    public String toString() {
-        return new Gson().toJson(this);
-    }
 }

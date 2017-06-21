@@ -1,6 +1,5 @@
 package io.github.allaudin.yabk.generator;
 
-import com.google.gson.Gson;
 import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.TypeName;
@@ -29,6 +28,11 @@ class FieldGenerator {
      * Type of this field
      */
     private String fieldType;
+
+    /**
+     * Set if field type is primitive or not
+     */
+    private boolean isPrimitive;
 
     void setPackageName(String packageName) {
         this.packageName = packageName;
@@ -111,17 +115,16 @@ class FieldGenerator {
         throw new IllegalArgumentException("Unknown type " + name);
     } // getType
 
+    void setPrimitive(boolean primitive) {
+        isPrimitive = primitive;
+    }
+
     private boolean isPrimitive() {
-        return packageName == null || packageName.length() == 0;
+        return isPrimitive;
     }
 
     void setFieldType(String fieldType) {
         this.fieldType = fieldType;
     }
 
-
-    @Override
-    public String toString() {
-        return new Gson().toJson(this);
-    }
 }

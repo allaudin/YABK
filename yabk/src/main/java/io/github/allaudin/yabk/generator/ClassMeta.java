@@ -41,6 +41,7 @@ public class ClassMeta {
         return className.charAt(0) == "$".charAt(0) ? className.replaceFirst("\\$", "") : "Yabk" + className;
     } // cleanClassName
 
+
     String getClassName() {
         return className;
     }

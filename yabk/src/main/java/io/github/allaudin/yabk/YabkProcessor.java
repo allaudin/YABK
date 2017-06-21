@@ -18,6 +18,9 @@ import io.github.allaudin.yabk.generator.ClassMeta;
 
 public class YabkProcessor extends AbstractProcessor {
 
+
+    private String packageName;
+
     @Override
     public boolean process(Set<? extends TypeElement> set, RoundEnvironment roundEnvironment) {
 
@@ -41,6 +44,8 @@ public class YabkProcessor extends AbstractProcessor {
             TypeElement type = (TypeElement) e;
 
             note("Processing %s", e.toString());
+
+            packageName = Utils.getPackage(type.getQualifiedName().toString());
 
             ClassGenerator classGenerator = new ClassGenerator(new ClassMeta(type));
 
@@ -73,10 +78,13 @@ public class YabkProcessor extends AbstractProcessor {
         boolean isNotSkipped = ee.getAnnotation(YabkSkip.class) == null;
         boolean isProtected = ee.getModifiers().contains(Modifier.PROTECTED) || ee.getModifiers().isEmpty();
         boolean isField = ee.getKind() == ElementKind.FIELD;
+        boolean isYabkGenerated = ee.getAnnotation(YabkGenerated.class) != null;
 
         if (isField && isProtected && isNotSkipped) {
+            boolean isPrimitive = ee.asType().getKind().isPrimitive();
             String fieldType = ee.asType().toString();
-            classGenerator.add(fieldType, ee.getSimpleName().toString());
+            fieldType = isYabkGenerated ? packageName + "." + fieldType : fieldType;
+            classGenerator.add(fieldType, ee.getSimpleName().toString(), isPrimitive);
         }
     } // processField
 
