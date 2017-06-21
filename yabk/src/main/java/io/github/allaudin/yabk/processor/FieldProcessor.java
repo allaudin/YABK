@@ -45,11 +45,12 @@ public class FieldProcessor {
             return model;
         }
 
+        // env.getTypeUtils().isAssignable(parcelType, env.getTypeUtils().asElement(((DeclaredType)element.asType()).getTypeArguments().get(0)).asType())
         TypeMirror parcelType = env.getElementUtils().getTypeElement("android.os.Parcelable").asType();
         boolean isParcelable = env.getTypeUtils().isAssignable(element.asType(), parcelType);
 
         if (isListOfStrings(env)) {
-            model.setPackageName("java.util.List");
+            model.setPackageName("java.lang.String");
             model.setStringList(true);
             model.setFieldType("String");
             model.setParcelable(true);
