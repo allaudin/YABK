@@ -45,17 +45,22 @@ public class FieldProcessor {
             return model;
         }
 
-
-
         TypeMirror parcelType = env.getElementUtils().getTypeElement("android.os.Parcelable").asType();
         boolean isParcelable = env.getTypeUtils().isAssignable(element.asType(), parcelType);
 
-        model.setParcelable(isParcelable);
-        model.setGeneratedByYabk(isYabkGenerated());
+        if (isListOfStrings(env)) {
+            model.setPackageName("java.util.List");
+            model.setStringList(true);
+            model.setFieldType("String");
+            model.setParcelable(true);
+        } else {
+            model.setParcelable(isParcelable);
+            model.setFieldType(getFieldType());
+            model.setPackageName(getPackage());
+            model.setGeneratedByYabk(isYabkGenerated());
+        }
         model.setPrimitive(isPrimitive());
-        model.setFieldType(getFieldType());
-        model.setPackageName(getPackage());
-        model.setStringList(isListOfStrings());
+
         model.setFieldName(element.getSimpleName().toString());
 
         return model;
@@ -86,21 +91,26 @@ public class FieldProcessor {
         return isPrimitive() ? fieldType : Utils.getClassName(fieldType);
     }
 
-    private boolean isListOfStrings() {
+    private boolean isListOfStrings(ProcessingEnvironment env) {
         if (element.asType().getKind() == TypeKind.DECLARED) {
+
+            TypeMirror listType = env.getElementUtils().getTypeElement("java.util.List").asType();
+            TypeMirror thisType = env.getTypeUtils().asElement(element.asType()).asType();
+
+            if (!env.getTypeUtils().isSameType(listType, thisType)) {
+                return false;
+            }
+
             DeclaredType type = (DeclaredType) element.asType();
             List<? extends TypeMirror> args = type.getTypeArguments();
 
-            boolean isList = type.asElement().toString().equals(List.class.getCanonicalName());
-            boolean isStringType = !args.isEmpty() && args.size() == 1 && args.get(0).toString().equals(String.class.getCanonicalName());
-
-            return isList && isStringType;
+            return !args.isEmpty() && args.get(0).toString().equals(String.class.getCanonicalName());
         }
 
         return false;
     }
 
-    private boolean isGeneric(){
+    private boolean isGeneric() {
         if (element.asType().getKind() == TypeKind.DECLARED) {
             DeclaredType type = (DeclaredType) element.asType();
             List<? extends TypeMirror> args = type.getTypeArguments();

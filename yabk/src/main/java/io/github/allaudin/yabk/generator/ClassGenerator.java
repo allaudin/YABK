@@ -173,9 +173,7 @@ public final class ClassGenerator {
 
         if (field.isStringList()) {
             format = "this.$N = in.createStringArrayList()";
-        }
-
-        if (field.isParcelable()) {
+        }else if (field.isParcelable()) {
 
             ClassName typeName = ClassName.get(field.getPackageName(), field.getFieldType());
             builder.addStatement("this.$N = in.readParcelable($T.class.getClassLoader())", name, typeName);
@@ -218,9 +216,7 @@ public final class ClassGenerator {
 
         if(field.isStringList()){
             format = "dest.writeStringList($N)";
-        }
-
-        if (field.isParcelable()) {
+        }else if (field.isParcelable()) {
             format = "dest.writeParcelable($N, flags)";
         }
 

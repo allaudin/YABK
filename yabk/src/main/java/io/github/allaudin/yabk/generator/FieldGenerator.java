@@ -2,6 +2,7 @@ package io.github.allaudin.yabk.generator;
 
 import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.MethodSpec;
+import com.squareup.javapoet.ParameterizedTypeName;
 import com.squareup.javapoet.TypeName;
 
 import javax.lang.model.element.Modifier;
@@ -31,6 +32,13 @@ public final class FieldGenerator {
 
         if (fieldModel.isPrimitive()) {
             builder.addParameter(getType(fieldModel.getFieldType()), fieldModel.getFieldName());
+            builder.addStatement("this.$1N = $1N", fieldModel.getFieldName());
+        }
+        if (fieldModel.isStringList()) {
+            ClassName list = ClassName.get("java.util", "List");
+            ClassName string = ClassName.get("java.lang", "String");
+            TypeName typeName = ParameterizedTypeName.get(list, string);
+            builder.addParameter(typeName, fieldModel.getFieldName());
             builder.addStatement("this.$1N = $1N", fieldModel.getFieldName());
         } else {
             ClassName clazz = ClassName.get(fieldModel.getPackageName(), fieldModel.getFieldType());
@@ -62,7 +70,17 @@ public final class FieldGenerator {
             } else {
                 builder.addStatement("return this.$1N = $1N", fieldModel.getFieldName());
             }
-            builder.returns(clazz);
+
+            if(fieldModel.isStringList()){
+
+                ClassName list = ClassName.get("java.util", "List");
+                ClassName string = ClassName.get("java.lang", "String");
+                TypeName typeName = ParameterizedTypeName.get(list, string);
+                builder.returns(typeName);
+            }else {
+
+                builder.returns(clazz);
+            }
         }
 
         builder.addModifiers(Modifier.PUBLIC);
