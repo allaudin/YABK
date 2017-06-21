@@ -46,7 +46,7 @@ public class FieldModel {
 
 
     /**
-     * This type is parcelable or not
+     * Filed is parcelable or not e.g. implements {@code android.os.Parcelable} interface
      */
     private boolean isParcelable;
 
@@ -55,6 +55,11 @@ public class FieldModel {
      * True if current field type is List of Strings
      */
     private boolean isStringList;
+
+    /**
+     * Is string type
+     */
+    private boolean isString;
 
     public boolean isShouldBeAdded() {
         return shouldBeAdded;
@@ -118,5 +123,17 @@ public class FieldModel {
 
     public void setStringList(boolean stringList) {
         isStringList = stringList;
+    }
+
+    public boolean isString() {
+        return isString;
+    }
+
+    public void setString(boolean string) {
+        isString = string;
+    }
+
+    public boolean canBeAddedToParcel(){
+        return isPrimitive() || isParcelable() || isString();
     }
 } // FieldModel

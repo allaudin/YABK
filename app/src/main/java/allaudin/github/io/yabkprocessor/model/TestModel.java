@@ -19,6 +19,8 @@ public class TestModel implements Parcelable {
     // why not
     List<Integer> namesInt;
 
+    Integer x;
+
     protected TestModel(Parcel in) {
         mystring = in.readString();
         names = in.createStringArrayList();

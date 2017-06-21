@@ -60,7 +60,7 @@ public class FieldProcessor {
             model.setGeneratedByYabk(isYabkGenerated());
         }
         model.setPrimitive(isPrimitive());
-
+        model.setString(isStringType());
         model.setFieldName(element.getSimpleName().toString());
 
         return model;
@@ -80,6 +80,10 @@ public class FieldProcessor {
 
     private String getPackage() {
         return isPrimitive() ? "" : isYabkGenerated() ? packageName : Utils.getPackage(element.asType().toString());
+    }
+
+    private boolean isStringType() {
+        return  element.asType().toString().equals(String.class.getCanonicalName());
     }
 
     private boolean isPrimitive() {

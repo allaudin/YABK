@@ -75,7 +75,7 @@ public final class ClassGenerator {
 
         for (FieldModel field : fields) {
 
-            if (field.isPrimitive() || field.isParcelable()) {
+            if (field.canBeAddedToParcel()) {
                 // TODO: 6/21/17 what if parcelable class is abstract, it will not have CREATE field. 
                 addWriteParcel(parcelWriteBuilder, field);
                 addReadParcel(parcelReadBuilder, field);
@@ -173,7 +173,7 @@ public final class ClassGenerator {
 
         if (field.isStringList()) {
             format = "this.$N = in.createStringArrayList()";
-        }else if (field.isParcelable()) {
+        } else if (field.isParcelable()) {
 
             ClassName typeName = ClassName.get(field.getPackageName(), field.getFieldType());
             builder.addStatement("this.$N = in.readParcelable($T.class.getClassLoader())", name, typeName);
@@ -215,9 +215,9 @@ public final class ClassGenerator {
 
         } // switch
 
-        if(field.isStringList()){
+        if (field.isStringList()) {
             format = "dest.writeStringList($N)";
-        }else if (field.isParcelable()) {
+        } else if (field.isParcelable()) {
             format = "dest.writeParcelable($N, flags)";
         }
 

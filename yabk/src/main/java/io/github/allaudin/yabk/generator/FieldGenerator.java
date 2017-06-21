@@ -33,8 +33,7 @@ public final class FieldGenerator {
         if (fieldModel.isPrimitive()) {
             builder.addParameter(getType(fieldModel.getFieldType()), fieldModel.getFieldName());
             builder.addStatement("this.$1N = $1N", fieldModel.getFieldName());
-        }
-        if (fieldModel.isStringList()) {
+        }else if (fieldModel.isStringList()) {
             ClassName list = ClassName.get("java.util", "List");
             ClassName string = ClassName.get("java.lang", "String");
             TypeName typeName = ParameterizedTypeName.get(list, string);
