@@ -3,6 +3,8 @@ package allaudin.github.io.yabkprocessor.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import java.util.List;
+
 /**
  * Created on 6/21/17.
  *
@@ -11,15 +13,21 @@ import android.os.Parcelable;
 
 public class TestModel implements Parcelable {
 
-    String test;
+    List mylist;
+    String mystring;
+    List<String> names;
+    // why not
+    List<Integer> namesInt;
 
     protected TestModel(Parcel in) {
-        test = in.readString();
+        mystring = in.readString();
+        names = in.createStringArrayList();
     }
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(test);
+        dest.writeString(mystring);
+        dest.writeStringList(names);
     }
 
     @Override
@@ -39,3 +47,4 @@ public class TestModel implements Parcelable {
         }
     };
 }
+

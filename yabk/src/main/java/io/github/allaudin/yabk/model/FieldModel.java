@@ -50,6 +50,12 @@ public class FieldModel {
      */
     private boolean isParcelable;
 
+
+    /**
+     * True if current field type is List of Strings
+     */
+    private boolean isStringList;
+
     public boolean isShouldBeAdded() {
         return shouldBeAdded;
     }
@@ -104,5 +110,13 @@ public class FieldModel {
 
     public void setParcelable(boolean parcelable) {
         isParcelable = parcelable;
+    }
+
+    public boolean isStringList() {
+        return isStringList;
+    }
+
+    public void setStringList(boolean stringList) {
+        isStringList = stringList;
     }
 } // FieldModel

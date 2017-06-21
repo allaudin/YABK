@@ -171,6 +171,9 @@ public final class ClassGenerator {
 
         } // switch
 
+        if (field.isStringList()) {
+            format = "this.$N = in.createStringArrayList()";
+        }
 
         if (field.isParcelable()) {
 
@@ -213,6 +216,9 @@ public final class ClassGenerator {
 
         } // switch
 
+        if(field.isStringList()){
+            format = "dest.writeStringList($N)";
+        }
 
         if (field.isParcelable()) {
             format = "dest.writeParcelable($N, flags)";

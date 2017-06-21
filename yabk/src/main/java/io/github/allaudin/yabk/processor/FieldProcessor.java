@@ -1,9 +1,13 @@
 package io.github.allaudin.yabk.processor;
 
+import java.util.List;
+
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.Modifier;
+import javax.lang.model.type.DeclaredType;
+import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
 
 import io.github.allaudin.yabk.Utils;
@@ -49,6 +53,7 @@ public class FieldProcessor {
         model.setPrimitive(isPrimitive());
         model.setFieldType(getFieldType());
         model.setPackageName(getPackage());
+        model.setStringList(isListOfStrings());
         model.setFieldName(element.getSimpleName().toString());
 
         return model;
@@ -77,5 +82,19 @@ public class FieldProcessor {
     private String getFieldType() {
         String fieldType = element.asType().toString();
         return isPrimitive() ? fieldType : Utils.getClassName(fieldType);
+    }
+
+    private boolean isListOfStrings() {
+        if (element.asType().getKind() == TypeKind.DECLARED) {
+            DeclaredType type = (DeclaredType) element.asType();
+            List<? extends TypeMirror> args = type.getTypeArguments();
+
+            boolean isList = type.asElement().toString().equals(List.class.getCanonicalName());
+            boolean isStringType = !args.isEmpty() && args.size() == 1 && args.get(0).toString().equals(String.class.getCanonicalName());
+
+            return isList && isStringType;
+        }
+
+        return false;
     }
 } // FieldProcessor
