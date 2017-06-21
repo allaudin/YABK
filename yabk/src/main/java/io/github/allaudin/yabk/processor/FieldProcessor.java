@@ -74,6 +74,12 @@ public class FieldProcessor {
     }
 
 
+    private boolean isList(ProcessingEnvironment env) {
+        TypeMirror listType = env.getElementUtils().getTypeElement("java.util.List").asType();
+        TypeMirror thisType = env.getTypeUtils().asElement(element.asType()).asType();
+        return env.getTypeUtils().isSameType(listType, thisType);
+    }
+
     private boolean isYabkGenerated() {
         return element.getAnnotation(YabkGenerated.class) != null;
     }
@@ -83,7 +89,7 @@ public class FieldProcessor {
     }
 
     private boolean isStringType() {
-        return  element.asType().toString().equals(String.class.getCanonicalName());
+        return element.asType().toString().equals(String.class.getCanonicalName());
     }
 
     private boolean isPrimitive() {
@@ -98,10 +104,7 @@ public class FieldProcessor {
     private boolean isListOfStrings(ProcessingEnvironment env) {
         if (element.asType().getKind() == TypeKind.DECLARED) {
 
-            TypeMirror listType = env.getElementUtils().getTypeElement("java.util.List").asType();
-            TypeMirror thisType = env.getTypeUtils().asElement(element.asType()).asType();
-
-            if (!env.getTypeUtils().isSameType(listType, thisType)) {
+            if (!isList(env)) {
                 return false;
             }
 

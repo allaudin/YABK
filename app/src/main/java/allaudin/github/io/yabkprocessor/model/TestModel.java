@@ -13,23 +13,15 @@ import java.util.List;
 
 public class TestModel implements Parcelable {
 
-    List mylist;
-    String mystring;
-    List<String> names;
-    // why not
-    List<Integer> namesInt;
-
-    Integer x;
+    List<Person> persons;
 
     protected TestModel(Parcel in) {
-        mystring = in.readString();
-        names = in.createStringArrayList();
+        persons = in.createTypedArrayList(Person.CREATOR);
     }
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(mystring);
-        dest.writeStringList(names);
+        dest.writeTypedList(persons);
     }
 
     @Override

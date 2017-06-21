@@ -1,6 +1,7 @@
 package allaudin.github.io.yabkprocessor.model;
 
-import io.github.allaudin.yabk.YabkGenerated;
+import java.util.List;
+
 import io.github.allaudin.yabk.YabkProcess;
 
 /**
@@ -14,6 +15,5 @@ abstract class $User {
     String name;
     int id;
 
-    @YabkGenerated
-    Person person;
+    List<A> persons;
 }
