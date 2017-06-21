@@ -57,8 +57,8 @@ public class FieldProcessor {
             model.setParcelable(isParcelable);
             model.setFieldType(getFieldType());
             model.setPackageName(getPackage());
-            model.setGeneratedByYabk(isYabkGenerated());
         }
+
         model.setPrimitive(isPrimitive());
         model.setString(isStringType());
         model.setFieldName(element.getSimpleName().toString());
@@ -113,14 +113,5 @@ public class FieldProcessor {
 
         return false;
     }
-
-    private boolean isGeneric() {
-        if (element.asType().getKind() == TypeKind.DECLARED) {
-            DeclaredType type = (DeclaredType) element.asType();
-            List<? extends TypeMirror> args = type.getTypeArguments();
-            return !args.isEmpty();
-        }
-
-        return false;
-    }
+    
 } // FieldProcessor
