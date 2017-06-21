@@ -114,7 +114,7 @@ public class FieldModel {
         isStringList = stringList;
     }
 
-    private boolean isString() {
+    public boolean isString() {
         return isString;
     }
 

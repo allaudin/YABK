@@ -63,7 +63,7 @@ public final class FieldGenerator {
         } else {
             ClassName clazz = ClassName.get(fieldModel.getPackageName(), fieldModel.getFieldType());
 
-            if (nonNullString && fieldModel.getFieldType().equals("String")) {
+            if (nonNullString && fieldModel.isString()) {
                 String format = "return this.$1N == null? $2S: this.$1N";
                 builder.addStatement(format, fieldModel.getFieldName(), "");
             } else {
@@ -71,13 +71,11 @@ public final class FieldGenerator {
             }
 
             if(fieldModel.isStringList()){
-
                 ClassName list = ClassName.get("java.util", "List");
                 ClassName string = ClassName.get("java.lang", "String");
                 TypeName typeName = ParameterizedTypeName.get(list, string);
                 builder.returns(typeName);
             }else {
-
                 builder.returns(clazz);
             }
         }
