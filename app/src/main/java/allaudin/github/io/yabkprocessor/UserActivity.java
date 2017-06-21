@@ -1,10 +1,11 @@
 package allaudin.github.io.yabkprocessor;
 
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.widget.TextView;
 
 import allaudin.github.io.yabkprocessor.model.UserModel;
+
 
 public class UserActivity extends AppCompatActivity {
 
