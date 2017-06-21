@@ -11,6 +11,4 @@ import io.github.allaudin.yabk.YabkProcess;
 @YabkProcess
 abstract class $Person {
     int modelId;
-    public $Person(){}
-    protected $Person(String s){}
 }
