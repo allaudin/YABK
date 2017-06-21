@@ -45,6 +45,11 @@ public class FieldModel {
     private boolean isPrimitive;
 
 
+    /**
+     * This type is parcelable or not
+     */
+    private boolean isParcelable;
+
     public boolean isShouldBeAdded() {
         return shouldBeAdded;
     }
@@ -91,5 +96,13 @@ public class FieldModel {
 
     public void setPrimitive(boolean primitive) {
         isPrimitive = primitive;
+    }
+
+    public boolean isParcelable() {
+        return isParcelable;
+    }
+
+    public void setParcelable(boolean parcelable) {
+        isParcelable = parcelable;
     }
 } // FieldModel

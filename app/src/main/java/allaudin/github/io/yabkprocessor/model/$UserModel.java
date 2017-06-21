@@ -1,6 +1,5 @@
 package allaudin.github.io.yabkprocessor.model;
 
-import io.github.allaudin.yabk.YabkGenerated;
 import io.github.allaudin.yabk.YabkProcess;
 
 /**
@@ -17,6 +16,6 @@ abstract class $UserModel {
     String phone;
     boolean isMarried;
 
-    @YabkGenerated Person person;
+    TestModel test;
 
 }

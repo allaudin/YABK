@@ -61,11 +61,11 @@ public final class ClassGenerator {
         boolean mutatorOnly = classModel.getMethods() == Methods.MUTATORS;
         boolean accessorOnly = classModel.getMethods() == Methods.ACCESSORS;
 
-        MethodSpec.Builder parcelReadConstructor = MethodSpec.constructorBuilder().addModifiers(Modifier.PROTECTED)
+        MethodSpec.Builder parcelReadBuilder = MethodSpec.constructorBuilder().addModifiers(Modifier.PROTECTED)
                 .addParameter(parcel, "in");
 
 
-        MethodSpec.Builder parcelWriter = MethodSpec.methodBuilder("writeToParcel")
+        MethodSpec.Builder parcelWriteBuilder = MethodSpec.methodBuilder("writeToParcel")
                 .addModifiers(Modifier.PUBLIC)
                 .returns(void.class)
                 .addAnnotation(Override.class)
@@ -75,8 +75,10 @@ public final class ClassGenerator {
 
         for (FieldModel field : fields) {
 
-            addParcelStatements(parcelWriter, field, false);
-            addParcelStatements(parcelReadConstructor, field, true);
+            if (field.isPrimitive() || field.isParcelable()) {
+                addWriteParcel(parcelWriteBuilder, field);
+                addReadParcel(parcelReadBuilder, field);
+            }
 
             if (mutatorOnly) {
                 clazzBuilder.addMethod(fieldGenerator.getMutator(field));
@@ -96,8 +98,8 @@ public final class ClassGenerator {
                 .addStatement("return $L", 0);
 
         // add parcel methods
-        clazzBuilder.addMethod(parcelReadConstructor.build());
-        clazzBuilder.addMethod(parcelWriter.build());
+        clazzBuilder.addMethod(parcelReadBuilder.build());
+        clazzBuilder.addMethod(parcelWriteBuilder.build());
         clazzBuilder.addMethod(describeContents.build());
         clazzBuilder.addField(getParcelCreateField());
 
@@ -136,9 +138,8 @@ public final class ClassGenerator {
      *
      * @param builder method builder
      * @param field   parcelable field
-     * @param read    true - if it is read statement, false if it is write.
      */
-    private void addParcelStatements(MethodSpec.Builder builder, FieldModel field, boolean read) {
+    private void addReadParcel(MethodSpec.Builder builder, FieldModel field) {
         String type = field.getFieldType();
         String name = field.getFieldName();
         String format = "";
@@ -146,32 +147,80 @@ public final class ClassGenerator {
         switch (type) {
 
             case "boolean":
-                format = read ? "this.$N = in.readByte() != 0" : "dest.writeByte((byte) ($N ? 1 : 0))";
+                format = "this.$N = in.readByte() != 0";
                 break;
             case "byte":
-                format = read ? "this.$N = in.readByte()" : "dest.writeByte($N)";
+                format = "this.$N = in.readByte()";
                 break;
             case "int":
-                format = read ? "this.$N = in.readInt()" : "dest.writeInt($N)";
+                format = "this.$N = in.readInt()";
                 break;
             case "long":
-                format = read ? "this.$N = in.readLong()" : "dest.writeLong($N)";
+                format = "this.$N = in.readLong()";
                 break;
             case "float":
-                format = read ? "this.$N = in.readFloat()" : "dest.writeFloat($N)";
+                format = "this.$N = in.readFloat()";
                 break;
             case "String":
-                format = read ? "this.$N = in.readString()" : "dest.writeString($N)";
+                format = "this.$N = in.readString()";
                 break;
             case "double":
-                format = read ? "this.$N = in.readDouble()" : "dest.writeDouble($N)";
+                format = "this.$N = in.readDouble()";
                 break;
 
         } // switch
 
+
+        if (field.isParcelable()) {
+
+            ClassName typeName = ClassName.get(field.getPackageName(), field.getFieldType());
+            builder.addStatement("this.$N = in.readParcelable($T.class.getClassLoader())", name, typeName);
+
+        } else if (format.length() > 0) {
+            builder.addStatement(format, name);
+        }
+    } // addReadParcel
+
+    private void addWriteParcel(MethodSpec.Builder builder, FieldModel field) {
+        String type = field.getFieldType();
+        String name = field.getFieldName();
+        String format = "";
+
+        switch (type) {
+
+            case "boolean":
+                format = "dest.writeByte((byte) ($N ? 1 : 0))";
+                break;
+            case "byte":
+                format = "dest.writeByte($N)";
+                break;
+            case "int":
+                format = "dest.writeInt($N)";
+                break;
+            case "long":
+                format = "dest.writeLong($N)";
+                break;
+            case "float":
+                format = "dest.writeFloat($N)";
+                break;
+            case "String":
+                format = "dest.writeString($N)";
+                break;
+            case "double":
+                format = "dest.writeDouble($N)";
+                break;
+
+        } // switch
+
+
+        if (field.isParcelable()) {
+            format = "dest.writeParcelable($N, flags)";
+        }
+
         if (format.length() > 0) {
             builder.addStatement(format, name);
         }
-    } // addParcelStatements
+    } // addWriteParcel
+
 
 }

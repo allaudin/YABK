@@ -55,9 +55,12 @@ public class YabkProcessor extends AbstractProcessor {
 
             List<? extends Element> enclosedElements = type.getEnclosedElements();
 
+
             for (Element ee : enclosedElements) {
-                FieldModel fieldModel = FieldProcessor.newInstance(packageName, ee).process();
-                if(fieldModel.isShouldBeAdded()){
+                FieldModel fieldModel = FieldProcessor.newInstance(packageName, ee).process(processingEnv);
+
+
+                if (fieldModel.isShouldBeAdded()) {
                     classGenerator.add(fieldModel);
                 }
             }

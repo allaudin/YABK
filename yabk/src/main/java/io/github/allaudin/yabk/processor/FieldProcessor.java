@@ -1,8 +1,10 @@
 package io.github.allaudin.yabk.processor;
 
+import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.Modifier;
+import javax.lang.model.type.TypeMirror;
 
 import io.github.allaudin.yabk.Utils;
 import io.github.allaudin.yabk.YabkGenerated;
@@ -30,10 +32,19 @@ public class FieldProcessor {
         return new FieldProcessor(packageName, element);
     }
 
-    public FieldModel process() {
+    public FieldModel process(ProcessingEnvironment env) {
         final FieldModel model = new FieldModel();
+
         model.setShouldBeAdded(shouldBeAdded());
 
+        if (!shouldBeAdded()) {
+            return model;
+        }
+
+        TypeMirror parcelType = env.getElementUtils().getTypeElement("android.os.Parcelable").asType();
+        boolean isParcelable = env.getTypeUtils().isAssignable(element.asType(), parcelType);
+
+        model.setParcelable(isParcelable);
         model.setGeneratedByYabk(isYabkGenerated());
         model.setPrimitive(isPrimitive());
         model.setFieldType(getFieldType());
