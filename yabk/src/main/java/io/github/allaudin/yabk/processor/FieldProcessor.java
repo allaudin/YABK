@@ -45,6 +45,8 @@ public class FieldProcessor {
             return model;
         }
 
+
+
         TypeMirror parcelType = env.getElementUtils().getTypeElement("android.os.Parcelable").asType();
         boolean isParcelable = env.getTypeUtils().isAssignable(element.asType(), parcelType);
 
@@ -93,6 +95,16 @@ public class FieldProcessor {
             boolean isStringType = !args.isEmpty() && args.size() == 1 && args.get(0).toString().equals(String.class.getCanonicalName());
 
             return isList && isStringType;
+        }
+
+        return false;
+    }
+
+    private boolean isGeneric(){
+        if (element.asType().getKind() == TypeKind.DECLARED) {
+            DeclaredType type = (DeclaredType) element.asType();
+            List<? extends TypeMirror> args = type.getTypeArguments();
+            return !args.isEmpty();
         }
 
         return false;
