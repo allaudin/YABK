@@ -50,7 +50,7 @@ public class FieldProcessor {
         boolean isParcelable = env.getTypeUtils().isAssignable(element.asType(), parcelType);
 
         if (isListOfStrings(env)) {
-            model.setPackageName("java.lang.String");
+            model.setPackageName("java.lang");
             model.setStringList(true);
             model.setFieldType("String");
             model.setParcelable(true);
