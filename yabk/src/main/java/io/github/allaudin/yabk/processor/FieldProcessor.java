@@ -6,12 +6,14 @@ import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.Modifier;
+import javax.lang.model.element.PackageElement;
 import javax.lang.model.type.DeclaredType;
 import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
 
 import io.github.allaudin.yabk.Utils;
 import io.github.allaudin.yabk.YabkGenerated;
+import io.github.allaudin.yabk.YabkLogger;
 import io.github.allaudin.yabk.YabkSkip;
 import io.github.allaudin.yabk.model.FieldModel;
 
@@ -45,7 +47,16 @@ public class FieldProcessor {
             return model;
         }
 
-        // env.getTypeUtils().isAssignable(parcelType, env.getTypeUtils().asElement(((DeclaredType)element.asType()).getTypeArguments().get(0)).asType())
+
+        boolean isPrimitive = isPrimitive();
+
+        if (!isPrimitive) {
+            Element e = env.getTypeUtils().asElement(element.asType());
+            PackageElement pkg = env.getElementUtils().getPackageOf(e);
+            YabkLogger.note("[%s] - %s", element.getSimpleName().toString(), pkg.toString());
+        }
+
+
         TypeMirror parcelType = env.getElementUtils().getTypeElement("android.os.Parcelable").asType();
         boolean isParcelable = env.getTypeUtils().isAssignable(element.asType(), parcelType);
 
@@ -60,7 +71,7 @@ public class FieldProcessor {
             model.setPackageName(getPackage());
         }
 
-        model.setPrimitive(isPrimitive());
+        model.setPrimitive(isPrimitive);
         model.setString(isStringType());
         model.setFieldName(element.getSimpleName().toString());
 

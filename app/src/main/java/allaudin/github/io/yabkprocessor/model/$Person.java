@@ -15,6 +15,6 @@ abstract class $Person {
     String name;
     boolean isMarried;
     byte myBtye;
-    List<String> parents;
+    List<String> stringList;
 
 }

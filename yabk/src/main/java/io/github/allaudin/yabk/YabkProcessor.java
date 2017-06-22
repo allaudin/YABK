@@ -10,7 +10,6 @@ import javax.lang.model.SourceVersion;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.Modifier;
 import javax.lang.model.element.TypeElement;
-import javax.tools.Diagnostic;
 
 import io.github.allaudin.yabk.generator.ClassGenerator;
 import io.github.allaudin.yabk.generator.FieldGenerator;
@@ -19,11 +18,15 @@ import io.github.allaudin.yabk.model.FieldModel;
 import io.github.allaudin.yabk.processor.ClassProcessor;
 import io.github.allaudin.yabk.processor.FieldProcessor;
 
+import static io.github.allaudin.yabk.YabkLogger.note;
+
 public class YabkProcessor extends AbstractProcessor {
 
 
     @Override
     public boolean process(Set<? extends TypeElement> set, RoundEnvironment roundEnvironment) {
+
+        YabkLogger.init(processingEnv.getMessager());
 
         // round completed
         if (roundEnvironment.processingOver()) {
@@ -69,7 +72,7 @@ public class YabkProcessor extends AbstractProcessor {
                 classGenerator.getFile().writeTo(processingEnv.getFiler());
             } catch (Exception ioe) {
                 ioe.printStackTrace();
-                error(e, "%s", "Error while writing file");
+                YabkLogger.error(e, "%s", "Error while writing file");
             }
 
         } // end for
@@ -83,14 +86,6 @@ public class YabkProcessor extends AbstractProcessor {
         return SourceVersion.latestSupported();
     } // getSupportedSourceVersion
 
-
-    private void note(String format, Object... objects) {
-        processingEnv.getMessager().printMessage(Diagnostic.Kind.NOTE, String.format(format + " ...", objects));
-    }
-
-    private void error(Element e, String format, Object... objects) {
-        processingEnv.getMessager().printMessage(Diagnostic.Kind.ERROR, String.format(format + " ...", objects), e);
-    }
 
     @Override
     public Set<String> getSupportedAnnotationTypes() {
