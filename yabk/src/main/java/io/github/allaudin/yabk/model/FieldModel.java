@@ -8,18 +8,6 @@ package io.github.allaudin.yabk.model;
 
 public class FieldModel {
 
-    /**
-     * Either <em>this field</em> should be added to generated class or not.
-     * <p>
-     * <b>Note:</b> Processor may through exception if a field which is not supposed to add is added.
-     * <p>
-     * Always check this while adding field to class.
-     *
-     * @see io.github.allaudin.yabk.generator.ClassGenerator#add(FieldModel)
-     */
-    private boolean shouldBeAdded;
-
-
 
     /**
      * Package name of this field
@@ -58,13 +46,6 @@ public class FieldModel {
      */
     private boolean isString;
 
-    public boolean isShouldBeAdded() {
-        return shouldBeAdded;
-    }
-
-    public void setShouldBeAdded(boolean shouldBeAdded) {
-        this.shouldBeAdded = shouldBeAdded;
-    }
 
     public String getPackageName() {
         return packageName;

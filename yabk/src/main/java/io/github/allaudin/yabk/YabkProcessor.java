@@ -8,6 +8,7 @@ import javax.annotation.processing.AbstractProcessor;
 import javax.annotation.processing.RoundEnvironment;
 import javax.lang.model.SourceVersion;
 import javax.lang.model.element.Element;
+import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.Modifier;
 import javax.lang.model.element.TypeElement;
 
@@ -60,12 +61,12 @@ public class YabkProcessor extends AbstractProcessor {
 
 
             for (Element ee : enclosedElements) {
-                FieldModel fieldModel = FieldProcessor.newInstance(packageName, ee).process(processingEnv);
 
-
-                if (fieldModel.isShouldBeAdded()) {
+                if (shouldBeAdded(ee)) {
+                    FieldModel fieldModel = FieldProcessor.newInstance(packageName, ee).process(processingEnv);
                     classGenerator.add(fieldModel);
                 }
+
             }
 
             try {
@@ -80,6 +81,20 @@ public class YabkProcessor extends AbstractProcessor {
 
         return true;
     } // process
+
+    /**
+     * Either this element should be added to generated class or not
+     *
+     * @param element this element
+     * @return true - if should be added, false otherwise
+     */
+    private boolean shouldBeAdded(Element element) {
+        boolean isNotSkipped = element.getAnnotation(YabkSkip.class) == null;
+        boolean isProtected = element.getModifiers().contains(Modifier.PROTECTED) || element.getModifiers().isEmpty();
+        boolean isField = element.getKind() == ElementKind.FIELD;
+        return isNotSkipped && isField && isProtected;
+    }
+
 
     @Override
     public SourceVersion getSupportedSourceVersion() {

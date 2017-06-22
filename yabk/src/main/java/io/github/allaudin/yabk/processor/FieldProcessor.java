@@ -4,8 +4,6 @@ import java.util.List;
 
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
-import javax.lang.model.element.ElementKind;
-import javax.lang.model.element.Modifier;
 import javax.lang.model.element.PackageElement;
 import javax.lang.model.type.DeclaredType;
 import javax.lang.model.type.TypeKind;
@@ -14,7 +12,6 @@ import javax.lang.model.type.TypeMirror;
 import io.github.allaudin.yabk.Utils;
 import io.github.allaudin.yabk.YabkGenerated;
 import io.github.allaudin.yabk.YabkLogger;
-import io.github.allaudin.yabk.YabkSkip;
 import io.github.allaudin.yabk.model.FieldModel;
 
 /**
@@ -40,13 +37,6 @@ public class FieldProcessor {
 
     public FieldModel process(ProcessingEnvironment env) {
         final FieldModel model = new FieldModel();
-
-        model.setShouldBeAdded(shouldBeAdded());
-
-        if (!shouldBeAdded()) {
-            return model;
-        }
-
 
         boolean isPrimitive = isPrimitive();
 
@@ -77,13 +67,6 @@ public class FieldProcessor {
 
         return model;
     } // process
-
-    private boolean shouldBeAdded() {
-        boolean isNotSkipped = element.getAnnotation(YabkSkip.class) == null;
-        boolean isProtected = element.getModifiers().contains(Modifier.PROTECTED) || element.getModifiers().isEmpty();
-        boolean isField = element.getKind() == ElementKind.FIELD;
-        return isNotSkipped && isField && isProtected;
-    }
 
 
     private boolean isList(ProcessingEnvironment env) {
