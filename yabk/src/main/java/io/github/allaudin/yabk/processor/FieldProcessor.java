@@ -12,7 +12,6 @@ import javax.lang.model.util.Types;
 
 import io.github.allaudin.yabk.ListTypes;
 import io.github.allaudin.yabk.Utils;
-import io.github.allaudin.yabk.YabkGenerated;
 import io.github.allaudin.yabk.model.FieldModel;
 
 import static io.github.allaudin.yabk.YabkLogger.note;
@@ -106,13 +105,6 @@ public class FieldProcessor {
 //        return typeUtils.isSameType(listType, thisType);
     }
 
-    private boolean isYabkGenerated() {
-        return element.getAnnotation(YabkGenerated.class) != null;
-    }
-
-    private String getPackage() {
-        return isPrimitiveType() ? "" : isYabkGenerated() ? packageName : Utils.getPackage(element.asType().toString());
-    }
 
     private boolean isStringType() {
         return element.asType().toString().equals(String.class.getCanonicalName());
