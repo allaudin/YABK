@@ -30,12 +30,18 @@ public final class FieldGenerator {
     MethodSpec getMutator(FieldModel fieldModel) {
         MethodSpec.Builder builder = MethodSpec.methodBuilder("set" + getCapitalizedString(fieldModel.getFieldName()));
 
+        ClassName list = ClassName.get("java.util", "List");
+
         if (fieldModel.isPrimitive()) {
             builder.addParameter(getType(fieldModel.getFieldType()), fieldModel.getFieldName());
             builder.addStatement("this.$1N = $1N", fieldModel.getFieldName());
-        }else if (fieldModel.isStringList()) {
-            ClassName list = ClassName.get("java.util", "List");
+        } else if (fieldModel.isStringList()) {
             ClassName string = ClassName.get("java.lang", "String");
+            TypeName typeName = ParameterizedTypeName.get(list, string);
+            builder.addParameter(typeName, fieldModel.getFieldName());
+            builder.addStatement("this.$1N = $1N", fieldModel.getFieldName());
+        } else if (fieldModel.isParcelableTypedList()) {
+            ClassName string = ClassName.get(fieldModel.getPackageName(), fieldModel.getFieldType());
             TypeName typeName = ParameterizedTypeName.get(list, string);
             builder.addParameter(typeName, fieldModel.getFieldName());
             builder.addStatement("this.$1N = $1N", fieldModel.getFieldName());
@@ -69,13 +75,17 @@ public final class FieldGenerator {
             } else {
                 builder.addStatement("return this.$1N = $1N", fieldModel.getFieldName());
             }
+            ClassName list = ClassName.get("java.util", "List");
 
-            if(fieldModel.isStringList()){
-                ClassName list = ClassName.get("java.util", "List");
+            if (fieldModel.isStringList()) {
                 ClassName string = ClassName.get("java.lang", "String");
                 TypeName typeName = ParameterizedTypeName.get(list, string);
                 builder.returns(typeName);
-            }else {
+            } else if (fieldModel.isParcelableTypedList()) {
+                ClassName string = ClassName.get(fieldModel.getPackageName(), fieldModel.getFieldType());
+                TypeName typeName = ParameterizedTypeName.get(list, string);
+                builder.returns(typeName);
+            } else {
                 builder.returns(clazz);
             }
         }

@@ -10,6 +10,7 @@ import javax.lang.model.type.TypeMirror;
 import javax.lang.model.util.Elements;
 import javax.lang.model.util.Types;
 
+import io.github.allaudin.yabk.ListTypes;
 import io.github.allaudin.yabk.Utils;
 import io.github.allaudin.yabk.YabkGenerated;
 import io.github.allaudin.yabk.model.FieldModel;
@@ -41,9 +42,14 @@ public class FieldProcessor {
         return new FieldProcessor(packageName, element, env);
     }
 
-    private String packageOfElement() {
+    private String packageOfElement(Element element) {
         return elementUtils.getPackageOf(element).toString();
     }
+
+    private String packageOfElement() {
+        return packageOfElement(element);
+    }
+
 
     public FieldModel process() {
         final FieldModel model = new FieldModel();
@@ -62,25 +68,35 @@ public class FieldProcessor {
             model.setParcelable(true);
             model.setStringList(true);
             // TODO: 6/22/17 just a placeholder - make it better
-            model.setFieldType("StringList");
+            model.setFieldType(ListTypes.STRING_LIST);
             model.setPackageName("java.util");
 
+        } else if (isList()) {
+            // TODO: 6/22/17 list of java.lang.Object
+            List<? extends TypeMirror> args = ((DeclaredType) element.asType()).getTypeArguments();
+            if (!args.isEmpty()) {
+                Element listElement = typeUtils.asElement(args.get(0));
+                model.setPackageName(packageOfElement(listElement));
+                model.setFieldType(getFieldType(listElement));
+                model.setParcelableTypedList(true);
+            } // end if
         } else {
 
-            model.setParcelable(isParcelable());
+            model.setParcelable(isParcelable(element));
             model.setFieldType(getFieldType());
             // TODO: 6/22/17 check why it returns default package
             model.setPackageName(packageOfElement());
             note("package %s - %s", model.getPackageName(), element.getSimpleName().toString());
         }
 
+
         model.setFieldName(element.getSimpleName().toString());
         return model;
     } // process
 
-    private boolean isParcelable() {
+    private boolean isParcelable(Element e) {
         TypeMirror parcelType = elementUtils.getTypeElement("android.os.Parcelable").asType();
-        return typeUtils.isAssignable(element.asType(), parcelType);
+        return typeUtils.isAssignable(e.asType(), parcelType);
     }
 
 
@@ -111,10 +127,15 @@ public class FieldProcessor {
                 element.asType().toString().equals(String.class.getCanonicalName());
     }
 
-    private String getFieldType() {
+    private String getFieldType(Element element) {
         String fieldType = element.asType().toString();
         return isPrimitiveType() ? fieldType : Utils.getClassName(fieldType);
     }
+
+    private String getFieldType() {
+        return getFieldType(element);
+    }
+
 
     private boolean isListOfStrings() {
         if (element.asType().getKind() == TypeKind.DECLARED) {

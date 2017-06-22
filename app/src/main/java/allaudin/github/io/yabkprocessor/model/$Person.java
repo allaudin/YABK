@@ -2,7 +2,6 @@ package allaudin.github.io.yabkprocessor.model;
 
 import java.util.List;
 
-import io.github.allaudin.yabk.YabkGenerated;
 import io.github.allaudin.yabk.YabkProcess;
 
 /**
@@ -13,11 +12,5 @@ import io.github.allaudin.yabk.YabkProcess;
 
 @YabkProcess
 abstract class $Person {
-    String name;
-    boolean isMarried;
-    byte myBtye;
-    List<String> stringList;
-    @YabkGenerated
-    User user;
-
+    List<User> userList;
 }

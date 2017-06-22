@@ -29,6 +29,10 @@ public class FieldModel {
      */
     private boolean isPrimitive;
 
+    /**
+     * Typed list
+     */
+    private boolean isParcelableTypedList;
 
     /**
      * Filed is parcelable or not e.g. implements {@code android.os.Parcelable} interface
@@ -103,7 +107,15 @@ public class FieldModel {
         isString = string;
     }
 
-    public boolean canBeAddedToParcel(){
-        return isPrimitive() || isParcelable() || isString();
+    public boolean canBeAddedToParcel() {
+        return isPrimitive() || isParcelable() || isString() || isParcelableTypedList();
+    }
+
+    public boolean isParcelableTypedList() {
+        return isParcelableTypedList;
+    }
+
+    public void setParcelableTypedList(boolean parcelableTypedList) {
+        isParcelableTypedList = parcelableTypedList;
     }
 } // FieldModel

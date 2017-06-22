@@ -14,6 +14,7 @@ import java.util.Set;
 
 import javax.lang.model.element.Modifier;
 
+import io.github.allaudin.yabk.ListTypes;
 import io.github.allaudin.yabk.Methods;
 import io.github.allaudin.yabk.model.ClassModel;
 import io.github.allaudin.yabk.model.FieldModel;
@@ -168,13 +169,15 @@ public final class ClassGenerator {
             case "double":
                 format = "this.$N = in.readDouble()";
                 break;
-            case "StringList":
+            case ListTypes.STRING_LIST:
                 format = "this.$N = in.createStringArrayList()";
                 break;
 
             default: {
-                if (field.isParcelable()) {
-                    ClassName typeName = ClassName.get(field.getPackageName(), field.getFieldType());
+                ClassName typeName = ClassName.get(field.getPackageName(), field.getFieldType());
+                if (field.isParcelableTypedList()) {
+                    builder.addStatement("this.$N = in.createTypedArrayList($T.CREATOR)", name, typeName);
+                } else if (field.isParcelable()) {
                     builder.addStatement("this.$N = in.readParcelable($T.class.getClassLoader())", name, typeName);
                 }
             }
@@ -214,14 +217,15 @@ public final class ClassGenerator {
             case "double":
                 format = "dest.writeDouble($N)";
                 break;
-            case "StringList":
+            case ListTypes.STRING_LIST:
                 format = "dest.writeStringList($N)";
                 break;
 
             default: {
-                if (field.isParcelable()) {
+                if (field.isParcelableTypedList()) {
+                    format = " dest.writeTypedList($N);";
+                } else if (field.isParcelable()) {
                     format = "dest.writeParcelable($N, flags)";
-
                 }
             }
         } // switch
