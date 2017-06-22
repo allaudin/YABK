@@ -41,24 +41,40 @@ public class FieldProcessor {
         return new FieldProcessor(packageName, element, env);
     }
 
+    private String packageOfElement() {
+        return elementUtils.getPackageOf(element).toString();
+    }
+
     public FieldModel process() {
         final FieldModel model = new FieldModel();
 
-
         if (isPrimitiveOrStringType()) {
+
             note("primitive or String type - %s", element.getSimpleName());
-            parsePrimitiveOrStringType(model);
-            return model;
+            model.setParcelable(true);
+            model.setFieldType(getFieldType());
+            model.setPackageName(packageOfElement());
+            model.setPrimitive(isPrimitiveType());
+            model.setString(isStringType());
+
         } else if (isListOfStrings()) {
-            model.setPrimitive(false);
+
             model.setParcelable(true);
             model.setStringList(true);
             // TODO: 6/22/17 just a placeholder - make it better
-            model.setFieldType("String");
+            model.setFieldType("StringList");
             model.setPackageName("java.util");
+
+        } else {
+
+            model.setParcelable(isParcelable());
+            model.setFieldType(getFieldType());
+            // TODO: 6/22/17 check why it returns default package
+            model.setPackageName(packageOfElement());
+            note("package %s - %s", model.getPackageName(), element.getSimpleName().toString());
         }
 
-
+        model.setFieldName(element.getSimpleName().toString());
         return model;
     } // process
 
@@ -67,19 +83,6 @@ public class FieldProcessor {
         return typeUtils.isAssignable(element.asType(), parcelType);
     }
 
-    /**
-     * Parse primitive type or java.lang.String type
-     *
-     * @param model field model to be populated
-     */
-    private void parsePrimitiveOrStringType(FieldModel model) {
-        model.setParcelable(true);
-        model.setFieldType(getFieldType());
-        model.setPackageName(elementUtils.getPackageOf(element).toString());
-        model.setPrimitive(isPrimitiveType());
-        model.setString(isStringType());
-        model.setFieldName(element.getSimpleName().toString());
-    } // parsePrimitive
 
     private boolean isList() {
         TypeMirror listType = elementUtils.getTypeElement("java.util.List").asType();

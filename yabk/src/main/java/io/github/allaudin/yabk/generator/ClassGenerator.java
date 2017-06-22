@@ -168,17 +168,19 @@ public final class ClassGenerator {
             case "double":
                 format = "this.$N = in.readDouble()";
                 break;
+            case "StringList":
+                format = "this.$N = in.createStringArrayList()";
+                break;
 
+            default: {
+                if (field.isParcelable()) {
+                    ClassName typeName = ClassName.get(field.getPackageName(), field.getFieldType());
+                    builder.addStatement("this.$N = in.readParcelable($T.class.getClassLoader())", name, typeName);
+                }
+            }
         } // switch
 
-        if (field.isStringList()) {
-            format = "this.$N = in.createStringArrayList()";
-        } else if (field.isParcelable()) {
 
-            ClassName typeName = ClassName.get(field.getPackageName(), field.getFieldType());
-            builder.addStatement("this.$N = in.readParcelable($T.class.getClassLoader())", name, typeName);
-
-        }
         if (format.length() > 0) {
             builder.addStatement(format, name);
         }
@@ -212,14 +214,17 @@ public final class ClassGenerator {
             case "double":
                 format = "dest.writeDouble($N)";
                 break;
+            case "StringList":
+                format = "dest.writeStringList($N)";
+                break;
 
+            default: {
+                if (field.isParcelable()) {
+                    format = "dest.writeParcelable($N, flags)";
+
+                }
+            }
         } // switch
-
-        if (field.isStringList()) {
-            format = "dest.writeStringList($N)";
-        } else if (field.isParcelable()) {
-            format = "dest.writeParcelable($N, flags)";
-        }
 
         if (format.length() > 0) {
             builder.addStatement(format, name);
