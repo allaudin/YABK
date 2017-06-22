@@ -12,5 +12,6 @@ import io.github.allaudin.yabk.YabkProcess;
 
 @YabkProcess
 abstract class $Person {
-    List<User> userList;
+    List<Person> userList;
+//    User user;
 }

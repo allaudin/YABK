@@ -67,7 +67,6 @@ public class FieldProcessor {
 
             model.setParcelable(true);
             model.setStringList(true);
-            // TODO: 6/22/17 just a placeholder - make it better
             model.setFieldType(ListTypes.STRING_LIST);
             model.setPackageName("java.util");
 
@@ -80,13 +79,11 @@ public class FieldProcessor {
                 model.setFieldType(getFieldType(listElement));
                 model.setParcelableTypedList(true);
             } // end if
-        } else {
 
+        } else {
             model.setParcelable(isParcelable(element));
             model.setFieldType(getFieldType());
-            // TODO: 6/22/17 check why it returns default package
             model.setPackageName(packageOfElement());
-            note("package %s - %s", model.getPackageName(), element.getSimpleName().toString());
         }
 
 

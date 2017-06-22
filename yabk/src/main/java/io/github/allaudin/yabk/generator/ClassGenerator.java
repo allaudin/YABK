@@ -223,7 +223,7 @@ public final class ClassGenerator {
 
             default: {
                 if (field.isParcelableTypedList()) {
-                    format = " dest.writeTypedList($N);";
+                    format = " dest.writeTypedList($N)";
                 } else if (field.isParcelable()) {
                     format = "dest.writeParcelable($N, flags)";
                 }
