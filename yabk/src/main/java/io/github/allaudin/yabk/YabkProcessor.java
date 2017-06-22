@@ -67,7 +67,7 @@ public class YabkProcessor extends AbstractProcessor {
                     classGenerator.add(fieldModel);
                 }
 
-            }
+            } // end for enclosed elements
 
             try {
                 classGenerator.getFile().writeTo(processingEnv.getFiler());
