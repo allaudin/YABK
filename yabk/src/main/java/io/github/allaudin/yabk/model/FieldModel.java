@@ -51,6 +51,11 @@ public class FieldModel {
     private boolean isString;
 
 
+    /**
+     * True if type is List
+     */
+    private boolean isList;
+
     public String getPackageName() {
         return packageName;
     }
@@ -117,5 +122,13 @@ public class FieldModel {
 
     public void setParcelableTypedList(boolean parcelableTypedList) {
         isParcelableTypedList = parcelableTypedList;
+    }
+
+    public boolean isList() {
+        return isList;
+    }
+
+    public void setList(boolean list) {
+        isList = list;
     }
 } // FieldModel

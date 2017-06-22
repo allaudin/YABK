@@ -40,7 +40,7 @@ public final class FieldGenerator {
             TypeName typeName = ParameterizedTypeName.get(list, string);
             builder.addParameter(typeName, fieldModel.getFieldName());
             builder.addStatement("this.$1N = $1N", fieldModel.getFieldName());
-        } else if (fieldModel.isParcelableTypedList()) {
+        } else if (fieldModel.isList()) {
             ClassName string = ClassName.get(fieldModel.getPackageName(), fieldModel.getFieldType());
             TypeName typeName = ParameterizedTypeName.get(list, string);
             builder.addParameter(typeName, fieldModel.getFieldName());
@@ -81,7 +81,7 @@ public final class FieldGenerator {
                 ClassName string = ClassName.get("java.lang", "String");
                 TypeName typeName = ParameterizedTypeName.get(list, string);
                 builder.returns(typeName);
-            } else if (fieldModel.isParcelableTypedList()) {
+            } else if (fieldModel.isList()) {
                 ClassName string = ClassName.get(fieldModel.getPackageName(), fieldModel.getFieldType());
                 TypeName typeName = ParameterizedTypeName.get(list, string);
                 builder.returns(typeName);

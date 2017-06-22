@@ -77,7 +77,8 @@ public class FieldProcessor {
                 Element listElement = typeUtils.asElement(args.get(0));
                 model.setPackageName(packageOfElement(listElement));
                 model.setFieldType(getFieldType(listElement));
-                model.setParcelableTypedList(true);
+                model.setList(true);
+                model.setParcelableTypedList(isParcelable(listElement));
             } // end if
 
         } else {
