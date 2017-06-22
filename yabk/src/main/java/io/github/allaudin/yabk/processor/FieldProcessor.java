@@ -27,14 +27,14 @@ public class FieldProcessor {
 
     private Element element;
     private String packageName;
-    private Elements elements;
-    private Types types;
+    private Elements elementUtils;
+    private Types typeUtils;
 
     private FieldProcessor(String packageName, Element element, ProcessingEnvironment env) {
         this.element = element;
         this.packageName = packageName;
-        elements = env.getElementUtils();
-        types = env.getTypeUtils();
+        this.typeUtils = env.getTypeUtils();
+        this.elementUtils = env.getElementUtils();
     }
 
 
@@ -48,8 +48,8 @@ public class FieldProcessor {
         boolean isPrimitive = isPrimitiveType();
 
         if (!isPrimitive) {
-            Element e = types.asElement(element.asType());
-            PackageElement pkg = elements.getPackageOf(e);
+            Element e = typeUtils.asElement(element.asType());
+            PackageElement pkg = elementUtils.getPackageOf(e);
             note("[%s] - %s", element.getSimpleName().toString(), pkg.toString());
             if (e.asType() instanceof DeclaredType) {
                 note("args size [%s]", ((DeclaredType) e.asType()).getTypeArguments().size());
@@ -57,8 +57,8 @@ public class FieldProcessor {
         }
 
 
-        TypeMirror parcelType = elements.getTypeElement("android.os.Parcelable").asType();
-        boolean isParcelable = types.isAssignable(element.asType(), parcelType);
+        TypeMirror parcelType = elementUtils.getTypeElement("android.os.Parcelable").asType();
+        boolean isParcelable = typeUtils.isAssignable(element.asType(), parcelType);
 
         if (isListOfStrings()) {
             model.setPackageName("java.lang");
@@ -68,7 +68,7 @@ public class FieldProcessor {
         } else {
             model.setParcelable(isParcelable);
             model.setFieldType(getFieldType());
-            model.setPackageName(getPackage());
+            model.setPackageName(elementUtils.getPackageOf(element).toString());
         }
 
         model.setPrimitive(isPrimitive);
@@ -80,9 +80,9 @@ public class FieldProcessor {
 
 
     private boolean isList() {
-        TypeMirror listType = elements.getTypeElement("java.util.List").asType();
-        TypeMirror thisType = types.asElement(element.asType()).asType();
-        return types.isSameType(listType, thisType);
+        TypeMirror listType = elementUtils.getTypeElement("java.util.List").asType();
+        TypeMirror thisType = typeUtils.asElement(element.asType()).asType();
+        return typeUtils.isSameType(listType, thisType);
     }
 
     private boolean isYabkGenerated() {
