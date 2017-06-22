@@ -16,6 +16,8 @@ abstract class $Person {
     User user;
     String name;
     int id;
+    MyModel myModel;
+    List<Integer> myIntList;
     List<User> myList;
 //    User user;
 }
