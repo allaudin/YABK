@@ -4,7 +4,6 @@ import java.util.List;
 
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
-import javax.lang.model.element.PackageElement;
 import javax.lang.model.type.DeclaredType;
 import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
@@ -45,39 +44,42 @@ public class FieldProcessor {
     public FieldModel process() {
         final FieldModel model = new FieldModel();
 
-        boolean isPrimitive = isPrimitiveType();
 
-        if (!isPrimitive) {
-            Element e = typeUtils.asElement(element.asType());
-            PackageElement pkg = elementUtils.getPackageOf(e);
-            note("[%s] - %s", element.getSimpleName().toString(), pkg.toString());
-            if (e.asType() instanceof DeclaredType) {
-                note("args size [%s]", ((DeclaredType) e.asType()).getTypeArguments().size());
-            }
-        }
-
-
-        TypeMirror parcelType = elementUtils.getTypeElement("android.os.Parcelable").asType();
-        boolean isParcelable = typeUtils.isAssignable(element.asType(), parcelType);
-
-        if (isListOfStrings()) {
-            model.setPackageName("java.lang");
-            model.setStringList(true);
-            model.setFieldType("String");
+        if (isPrimitiveOrStringType()) {
+            note("primitive or String type - %s", element.getSimpleName());
+            parsePrimitiveOrStringType(model);
+            return model;
+        } else if (isListOfStrings()) {
+            model.setPrimitive(false);
             model.setParcelable(true);
-        } else {
-            model.setParcelable(isParcelable);
-            model.setFieldType(getFieldType());
-            model.setPackageName(elementUtils.getPackageOf(element).toString());
+            model.setStringList(true);
+            // TODO: 6/22/17 just a placeholder - make it better
+            model.setFieldType("String");
+            model.setPackageName("java.util");
         }
 
-        model.setPrimitive(isPrimitive);
-        model.setString(isStringType());
-        model.setFieldName(element.getSimpleName().toString());
 
         return model;
     } // process
 
+    private boolean isParcelable() {
+        TypeMirror parcelType = elementUtils.getTypeElement("android.os.Parcelable").asType();
+        return typeUtils.isAssignable(element.asType(), parcelType);
+    }
+
+    /**
+     * Parse primitive type or java.lang.String type
+     *
+     * @param model field model to be populated
+     */
+    private void parsePrimitiveOrStringType(FieldModel model) {
+        model.setParcelable(true);
+        model.setFieldType(getFieldType());
+        model.setPackageName(elementUtils.getPackageOf(element).toString());
+        model.setPrimitive(isPrimitiveType());
+        model.setString(isStringType());
+        model.setFieldName(element.getSimpleName().toString());
+    } // parsePrimitive
 
     private boolean isList() {
         TypeMirror listType = elementUtils.getTypeElement("java.util.List").asType();
@@ -99,6 +101,11 @@ public class FieldProcessor {
 
     private boolean isPrimitiveType() {
         return element.asType().getKind().isPrimitive();
+    }
+
+    private boolean isPrimitiveOrStringType() {
+        return element.asType().getKind().isPrimitive() ||
+                element.asType().toString().equals(String.class.getCanonicalName());
     }
 
     private String getFieldType() {
