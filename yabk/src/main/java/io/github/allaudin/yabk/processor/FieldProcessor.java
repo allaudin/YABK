@@ -100,7 +100,9 @@ public class FieldProcessor {
     private boolean isList() {
         TypeMirror listType = elementUtils.getTypeElement("java.util.List").asType();
         TypeMirror thisType = typeUtils.asElement(element.asType()).asType();
-        return typeUtils.isSameType(listType, thisType);
+        // FIXME: 6/23/17 fix this type
+        return listType.toString().equals(thisType.toString());
+//        return typeUtils.isSameType(listType, thisType);
     }
 
     private boolean isYabkGenerated() {
