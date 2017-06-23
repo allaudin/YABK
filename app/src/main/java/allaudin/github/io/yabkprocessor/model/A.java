@@ -6,7 +6,7 @@ package allaudin.github.io.yabkprocessor.model;
  * @author M.Allaudin
  */
 
-public class A  {
+public class A<K, L, M>  {
 
     int n;
 

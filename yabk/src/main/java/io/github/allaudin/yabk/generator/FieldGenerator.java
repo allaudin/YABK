@@ -5,6 +5,9 @@ import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.ParameterizedTypeName;
 import com.squareup.javapoet.TypeName;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.lang.model.element.Modifier;
 
 import io.github.allaudin.yabk.model.FieldModel;
@@ -31,28 +34,56 @@ public final class FieldGenerator {
         MethodSpec.Builder builder = MethodSpec.methodBuilder("set" + getCapitalizedString(fieldModel.getFieldName()));
 
         ClassName list = ClassName.get("java.util", "List");
+        builder.addModifiers(Modifier.PUBLIC);
+        builder.returns(void.class);
 
         if (fieldModel.isPrimitive()) {
             builder.addParameter(getType(fieldModel.getFieldType()), fieldModel.getFieldName());
             builder.addStatement("this.$1N = $1N", fieldModel.getFieldName());
-        } else if (fieldModel.isStringList()) {
+            return builder.build();
+
+        }
+
+        if (fieldModel.isStringList()) {
             ClassName string = ClassName.get("java.lang", "String");
             TypeName typeName = ParameterizedTypeName.get(list, string);
             builder.addParameter(typeName, fieldModel.getFieldName());
             builder.addStatement("this.$1N = $1N", fieldModel.getFieldName());
-        } else if (fieldModel.isList()) {
+            return builder.build();
+        }
+
+        if (fieldModel.isList()) {
             ClassName string = ClassName.get(fieldModel.getPackageName(), fieldModel.getFieldType());
             TypeName typeName = ParameterizedTypeName.get(list, string);
             builder.addParameter(typeName, fieldModel.getFieldName());
             builder.addStatement("this.$1N = $1N", fieldModel.getFieldName());
-        } else {
-            ClassName clazz = ClassName.get(fieldModel.getPackageName(), fieldModel.getFieldType());
-            builder.addParameter(clazz, fieldModel.getFieldName());
-            builder.addStatement("this.$1N = $1N", fieldModel.getFieldName());
+            return builder.build();
         }
 
-        builder.addModifiers(Modifier.PUBLIC);
-        builder.returns(void.class);
+        if (fieldModel.isGeneric()) {
+            ClassName genType = ClassName.get(fieldModel.getPackageName(), fieldModel.getFieldType());
+
+            List<ClassName> classes = new ArrayList<>();
+            List<FieldModel> fields = fieldModel.getActualTypeInfo().getActualTypes();
+
+            for (FieldModel field : fields) {
+                ClassName cls = ClassName.get(field.getPackageName(), field.getFieldType());
+                classes.add(cls);
+            }
+
+            ClassName[] classesArray = classes.toArray(new ClassName[]{});
+            TypeName types = ParameterizedTypeName.get(genType, classesArray);
+
+            builder.addParameter(types, fieldModel.getFieldName());
+            builder.addStatement("this.$1N = $1N", fieldModel.getFieldName());
+
+            return builder.build();
+        }
+        ClassName clazz = ClassName.get(fieldModel.getPackageName(), fieldModel.getFieldType());
+        builder.addParameter(clazz, fieldModel.getFieldName());
+        builder.addStatement("this.$1N = $1N", fieldModel.getFieldName());
+
+
         return builder.build();
     } // getMutator
 
@@ -62,35 +93,56 @@ public final class FieldGenerator {
 
     MethodSpec getAccessor(FieldModel fieldModel, boolean nonNullString) {
         MethodSpec.Builder builder = MethodSpec.methodBuilder("get" + getCapitalizedString(fieldModel.getFieldName()));
+        builder.addModifiers(Modifier.PUBLIC);
 
         if (fieldModel.isPrimitive()) {
             builder.addStatement("return this.$N", fieldModel.getFieldName());
             builder.returns(getType(fieldModel.getFieldType()));
-        } else {
-            ClassName clazz = ClassName.get(fieldModel.getPackageName(), fieldModel.getFieldType());
-
-            if (nonNullString && fieldModel.isString()) {
-                String format = "return this.$1N == null? $2S: this.$1N";
-                builder.addStatement(format, fieldModel.getFieldName(), "");
-            } else {
-                builder.addStatement("return this.$1N = $1N", fieldModel.getFieldName());
-            }
-            ClassName list = ClassName.get("java.util", "List");
-
-            if (fieldModel.isStringList()) {
-                ClassName string = ClassName.get("java.lang", "String");
-                TypeName typeName = ParameterizedTypeName.get(list, string);
-                builder.returns(typeName);
-            } else if (fieldModel.isList()) {
-                ClassName string = ClassName.get(fieldModel.getPackageName(), fieldModel.getFieldType());
-                TypeName typeName = ParameterizedTypeName.get(list, string);
-                builder.returns(typeName);
-            } else {
-                builder.returns(clazz);
-            }
+            return builder.build();
         }
 
-        builder.addModifiers(Modifier.PUBLIC);
+
+        if (fieldModel.isGeneric()) {
+            ClassName genType = ClassName.get(fieldModel.getPackageName(), fieldModel.getFieldType());
+
+            List<ClassName> classes = new ArrayList<>();
+            List<FieldModel> fields = fieldModel.getActualTypeInfo().getActualTypes();
+
+            for (FieldModel field : fields) {
+                ClassName cls = ClassName.get(field.getPackageName(), field.getFieldType());
+                classes.add(cls);
+            }
+
+            ClassName[] classesArray = classes.toArray(new ClassName[]{});
+            TypeName types = ParameterizedTypeName.get(genType, classesArray);
+            builder.returns(types);
+            builder.addStatement("return this.$1N = $1N", fieldModel.getFieldName());
+            return builder.build();
+        }
+
+        ClassName clazz = ClassName.get(fieldModel.getPackageName(), fieldModel.getFieldType());
+
+        if (nonNullString && fieldModel.isString()) {
+            String format = "return this.$1N == null? $2S: this.$1N";
+            builder.addStatement(format, fieldModel.getFieldName(), "");
+        } else {
+            builder.addStatement("return this.$1N = $1N", fieldModel.getFieldName());
+        }
+        ClassName list = ClassName.get("java.util", "List");
+
+        if (fieldModel.isStringList()) {
+            ClassName string = ClassName.get("java.lang", "String");
+            TypeName typeName = ParameterizedTypeName.get(list, string);
+            builder.returns(typeName);
+        } else if (fieldModel.isList()) {
+            ClassName string = ClassName.get(fieldModel.getPackageName(), fieldModel.getFieldType());
+            TypeName typeName = ParameterizedTypeName.get(list, string);
+            builder.returns(typeName);
+        } else {
+            builder.returns(clazz);
+        }
+
+
         return builder.build();
     } // getAccessor
 

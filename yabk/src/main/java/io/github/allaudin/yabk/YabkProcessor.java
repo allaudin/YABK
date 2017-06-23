@@ -50,8 +50,6 @@ public class YabkProcessor extends AbstractProcessor {
 
             note("Processing %s", e.toString());
 
-            String packageName = Utils.getPackage(type.getQualifiedName().toString());
-
             ClassModel classModel = ClassProcessor.newInstance(type).process();
             FieldGenerator fieldGenerator = FieldGenerator.getInstance();
 
@@ -63,7 +61,7 @@ public class YabkProcessor extends AbstractProcessor {
             for (Element ee : enclosedElements) {
 
                 if (shouldBeAdded(ee)) {
-                    FieldModel fieldModel = FieldProcessor.newInstance(packageName, ee, processingEnv).process();
+                    FieldModel fieldModel = FieldProcessor.newInstance(ee, processingEnv).process();
                     classGenerator.add(fieldModel);
                 }
 

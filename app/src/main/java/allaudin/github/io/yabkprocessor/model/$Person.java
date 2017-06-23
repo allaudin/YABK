@@ -1,6 +1,7 @@
 package allaudin.github.io.yabkprocessor.model;
 
 import java.util.List;
+import java.util.Map;
 
 import io.github.allaudin.yabk.YabkProcess;
 
@@ -12,12 +13,17 @@ import io.github.allaudin.yabk.YabkProcess;
 
 @YabkProcess
 abstract class $Person {
-    List<A> userList;
+
     User user;
     String name;
     int id;
     MyModel myModel;
     List<Integer> myIntList;
     List<User> myList;
+//    List<List<Object>> objects;
+    Map map;
+    Void e;
+    Map<String, Integer> m;
+    A<String, Integer, Float> a;
 //    User user;
 }

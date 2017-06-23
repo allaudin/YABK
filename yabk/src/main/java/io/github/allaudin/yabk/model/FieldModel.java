@@ -1,5 +1,8 @@
 package io.github.allaudin.yabk.model;
 
+import java.util.LinkedList;
+import java.util.List;
+
 /**
  * Model representing the field.
  *
@@ -55,6 +58,17 @@ public class FieldModel {
      * True if type is List
      */
     private boolean isList;
+
+    /**
+     * Is generic type
+     */
+    private boolean isGeneric;
+
+
+    /**
+     * Actual type info if this is generic type
+     */
+    private ActualTypeInfo actualTypeInfo;
 
     public String getPackageName() {
         return packageName;
@@ -124,11 +138,66 @@ public class FieldModel {
         isParcelableTypedList = parcelableTypedList;
     }
 
+    public ActualTypeInfo getActualTypeInfo() {
+        return actualTypeInfo;
+    }
+
+    public void setActualTypeInfo(ActualTypeInfo actualTypeInfo) {
+        this.actualTypeInfo = actualTypeInfo;
+    }
+
     public boolean isList() {
         return isList;
     }
 
     public void setList(boolean list) {
         isList = list;
+    }
+
+    public boolean isGeneric() {
+        return isGeneric;
+    }
+
+    public void setGeneric(boolean generic) {
+        isGeneric = generic;
+    }
+
+    public static class ActualTypeInfo {
+        private List<FieldModel> actualTypes;
+
+        public ActualTypeInfo() {
+            actualTypes = new LinkedList<>();
+        }
+
+        public void add(FieldModel model) {
+            actualTypes.add(model);
+        }
+
+        public List<FieldModel> getActualTypes() {
+            return actualTypes;
+        }
+
+        @Override
+        public String toString() {
+            return "{" +
+                    "actualTypes=" + actualTypes +
+                    '}';
+        }
+    } // ActualTypeInfo
+
+    @Override
+    public String toString() {
+        return "{" +
+                "packageName='" + packageName + '\'' +
+                ", fieldName='" + fieldName + '\'' +
+                ", fieldType='" + fieldType + '\'' +
+                ", isPrimitive=" + isPrimitive +
+                ", isParcelableTypedList=" + isParcelableTypedList +
+                ", isParcelable=" + isParcelable +
+                ", isStringList=" + isStringList +
+                ", isString=" + isString +
+                ", isList=" + isList +
+                ", isGeneric=" + isGeneric +
+                '}';
     }
 } // FieldModel
