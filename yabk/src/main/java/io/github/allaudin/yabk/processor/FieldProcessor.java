@@ -4,6 +4,7 @@ import java.util.List;
 
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
+import javax.lang.model.type.ArrayType;
 import javax.lang.model.type.DeclaredType;
 import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
@@ -57,6 +58,7 @@ public class FieldProcessor {
 
         model.setFieldName(element.getSimpleName().toString());
 
+        // primitive processing
         if (isPrimitiveOrStringType()) {
             model.setParcelable(true);
             model.setFieldType(getFieldType());
@@ -67,6 +69,25 @@ public class FieldProcessor {
 
         }
 
+        // array type processing
+
+        if (element.asType().getKind() == TypeKind.ARRAY) {
+            model.setArray(true);
+            TypeMirror componentType = ((ArrayType) element.asType()).getComponentType();
+            boolean isPrimitive = componentType.getKind().isPrimitive();
+            Element thisElement = ((DeclaredType) componentType).asElement();
+            model.setPrimitive(isPrimitive);
+            model.setFieldType(thisElement.getSimpleName().toString());
+
+            if (!isPrimitive) {
+                model.setParcelable(isParcelable(thisElement));
+                model.setString(isStringType(typeUtils.asElement(componentType)));
+                model.setPackageName(packageOfElement(typeUtils.asElement(componentType)));
+            }
+            return model;
+        }
+
+        // list processing
         if (isListOfStrings()) {
 
             model.setParcelable(true);
@@ -77,6 +98,7 @@ public class FieldProcessor {
 
         }
 
+        // typed list processing
         if (isList()) {
             List<? extends TypeMirror> args = ((DeclaredType) element.asType()).getTypeArguments();
             if (!args.isEmpty()) {
@@ -141,8 +163,13 @@ public class FieldProcessor {
 
 
     private boolean isStringType() {
+        return isStringType(element);
+    }
+
+    private boolean isStringType(Element element) {
         return element.asType().toString().equals(String.class.getCanonicalName());
     }
+
 
     private boolean isPrimitiveType() {
         return element.asType().getKind().isPrimitive();

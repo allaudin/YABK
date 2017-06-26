@@ -64,6 +64,11 @@ public class FieldModel {
      */
     private boolean isGeneric;
 
+    /**
+     * Is this field an array
+     */
+    private boolean isArray;
+
 
     /**
      * Actual type info if this is generic type
@@ -134,6 +139,10 @@ public class FieldModel {
         return isParcelableTypedList;
     }
 
+    public boolean isParcelableArray() {
+        return isArray && isParcelable;
+    }
+
     public void setParcelableTypedList(boolean parcelableTypedList) {
         isParcelableTypedList = parcelableTypedList;
     }
@@ -185,9 +194,19 @@ public class FieldModel {
         }
     } // ActualTypeInfo
 
+
+    public boolean isArray() {
+        return isArray;
+    }
+
+    public void setArray(boolean array) {
+        isArray = array;
+    }
+
+
     @Override
     public String toString() {
-        return "{" +
+        return "FieldModel{" +
                 "packageName='" + packageName + '\'' +
                 ", fieldName='" + fieldName + '\'' +
                 ", fieldType='" + fieldType + '\'' +
@@ -198,6 +217,8 @@ public class FieldModel {
                 ", isString=" + isString +
                 ", isList=" + isList +
                 ", isGeneric=" + isGeneric +
+                ", isArray=" + isArray +
+                ", actualTypeInfo=" + actualTypeInfo +
                 '}';
     }
 } // FieldModel

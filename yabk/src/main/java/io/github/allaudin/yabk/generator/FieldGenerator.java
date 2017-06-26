@@ -1,5 +1,6 @@
 package io.github.allaudin.yabk.generator;
 
+import com.squareup.javapoet.ArrayTypeName;
 import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.ParameterizedTypeName;
@@ -37,6 +38,23 @@ public final class FieldGenerator {
         builder.addModifiers(Modifier.PUBLIC);
         builder.returns(void.class);
 
+        if (fieldModel.isPrimitive() && fieldModel.isArray()) {
+            builder.addParameter(getArrayType(fieldModel.getFieldType()), fieldModel.getFieldName());
+            builder.addStatement("this.$1N = $1N", fieldModel.getFieldName());
+            return builder.build();
+
+        }
+
+        if (fieldModel.isArray()) {
+
+            ClassName clazz = ClassName.get(fieldModel.getPackageName(), fieldModel.getFieldType());
+            builder.addParameter(ArrayTypeName.of(clazz), fieldModel.getFieldName());
+            builder.addStatement("this.$1N = $1N", fieldModel.getFieldName());
+            return builder.build();
+
+        }
+
+
         if (fieldModel.isPrimitive()) {
             builder.addParameter(getType(fieldModel.getFieldType()), fieldModel.getFieldName());
             builder.addStatement("this.$1N = $1N", fieldModel.getFieldName());
@@ -72,6 +90,7 @@ public final class FieldGenerator {
             }
 
             ClassName[] classesArray = classes.toArray(new ClassName[]{});
+            //noinspection ConfusingArgumentToVarargsMethod
             TypeName types = ParameterizedTypeName.get(genType, classesArray);
 
             builder.addParameter(types, fieldModel.getFieldName());
@@ -95,6 +114,22 @@ public final class FieldGenerator {
         MethodSpec.Builder builder = MethodSpec.methodBuilder("get" + getCapitalizedString(fieldModel.getFieldName()));
         builder.addModifiers(Modifier.PUBLIC);
 
+        if (fieldModel.isPrimitive() && fieldModel.isArray()) {
+            builder.addStatement("return this.$N", fieldModel.getFieldName());
+            builder.returns(getArrayType(fieldModel.getFieldType()));
+            return builder.build();
+
+        }
+
+        if (fieldModel.isArray()) {
+
+            ClassName clazz = ClassName.get(fieldModel.getPackageName(), fieldModel.getFieldType());
+            builder.addStatement("return this.$N", fieldModel.getFieldName());
+            builder.returns(ArrayTypeName.of(clazz));
+            return builder.build();
+
+        }
+
         if (fieldModel.isPrimitive()) {
             builder.addStatement("return this.$N", fieldModel.getFieldName());
             builder.returns(getType(fieldModel.getFieldType()));
@@ -114,6 +149,7 @@ public final class FieldGenerator {
             }
 
             ClassName[] classesArray = classes.toArray(new ClassName[]{});
+            //noinspection ConfusingArgumentToVarargsMethod
             TypeName types = ParameterizedTypeName.get(genType, classesArray);
             builder.returns(types);
             builder.addStatement("return this.$1N = $1N", fieldModel.getFieldName());
@@ -145,6 +181,28 @@ public final class FieldGenerator {
 
         return builder.build();
     } // getAccessor
+
+    private TypeName getArrayType(String name) {
+        switch (name) {
+            case "boolean":
+                return ArrayTypeName.of(TypeName.BOOLEAN);
+            case "byte":
+                return ArrayTypeName.of(TypeName.BYTE);
+            case "short":
+                return ArrayTypeName.of(TypeName.SHORT);
+            case "int":
+                return ArrayTypeName.of(TypeName.INT);
+            case "long":
+                return ArrayTypeName.of(TypeName.LONG);
+            case "char":
+                return ArrayTypeName.of(TypeName.CHAR);
+            case "float":
+                return ArrayTypeName.of(TypeName.FLOAT);
+            case "double":
+                return ArrayTypeName.of(TypeName.DOUBLE);
+        }
+        throw new IllegalArgumentException("Unknown array type " + name);
+    } // getType
 
     private TypeName getType(String name) {
         switch (name) {

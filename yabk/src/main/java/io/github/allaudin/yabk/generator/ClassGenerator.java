@@ -145,29 +145,30 @@ public final class ClassGenerator {
         String type = field.getFieldType();
         String name = field.getFieldName();
         String format = "";
+        boolean isArray = field.isArray();
 
         switch (type) {
 
             case "boolean":
-                format = "this.$N = in.readByte() != 0";
+                format = isArray ? "this.$N = in.createBooleanArray()" : "this.$N = in.readByte() != 0";
                 break;
             case "byte":
-                format = "this.$N = in.readByte()";
+                format = isArray ? "this.$N = in.createByteArray()" : "this.$N = in.readByte()";
                 break;
             case "int":
-                format = "this.$N = in.readInt()";
+                format = isArray ? "this.$N = in.createIntArray()" : "this.$N = in.readInt()";
                 break;
             case "long":
-                format = "this.$N = in.readLong()";
+                format = isArray ? "this.$N = in.createLongArray()" : "this.$N = in.readLong()";
                 break;
             case "float":
-                format = "this.$N = in.readFloat()";
+                format = isArray ? "this.$N = in.createFloatArray()" : "this.$N = in.readFloat()";
                 break;
             case "String":
-                format = "this.$N = in.readString()";
+                format = isArray ? "this.$N = in.createStringArray()" : "this.$N = in.readString()";
                 break;
             case "double":
-                format = "this.$N = in.readDouble()";
+                format = isArray ? "this.$N = in.createDoubleArray()" : "this.$N = in.readDouble()";
                 break;
             case ListTypes.STRING_LIST:
                 format = "this.$N = in.createStringArrayList()";
@@ -177,7 +178,9 @@ public final class ClassGenerator {
                 ClassName typeName = ClassName.get(field.getPackageName(), field.getFieldType());
                 if (field.isParcelableTypedList()) {
                     builder.addStatement("this.$N = in.createTypedArrayList($T.CREATOR)", name, typeName);
-                } else if (field.isParcelable()) {
+                } else if(field.isParcelableArray()){
+                    builder.addStatement("this.$N = in.createTypedArray($T.CREATOR)", name, typeName);
+                }else if (field.isParcelable()) {
                     builder.addStatement("this.$N = in.readParcelable($T.class.getClassLoader())", name, typeName);
                 }
             }
@@ -193,29 +196,30 @@ public final class ClassGenerator {
         String type = field.getFieldType();
         String name = field.getFieldName();
         String format = "";
+        boolean isArray = field.isArray();
 
         switch (type) {
 
             case "boolean":
-                format = "dest.writeByte((byte) ($N ? 1 : 0))";
+                format = isArray ? "dest.writeBooleanArray($N)" : "dest.writeByte((byte) ($N ? 1 : 0))";
                 break;
             case "byte":
-                format = "dest.writeByte($N)";
+                format = isArray ? "dest.writeByteArray($N)" : "dest.writeByte($N)";
                 break;
             case "int":
-                format = "dest.writeInt($N)";
+                format = isArray ? "dest.writeIntArray($N)" : "dest.writeInt($N)";
                 break;
             case "long":
-                format = "dest.writeLong($N)";
+                format = isArray ? "dest.writeLongArray($N)" : "dest.writeLong($N)";
                 break;
             case "float":
-                format = "dest.writeFloat($N)";
+                format = isArray ? "dest.writeFloatArray($N)" : "dest.writeFloat($N)";
                 break;
             case "String":
-                format = "dest.writeString($N)";
+                format = isArray ? "dest.writeStringArray($N)" : "dest.writeString($N)";
                 break;
             case "double":
-                format = "dest.writeDouble($N)";
+                format = isArray ? "dest.writeDoubleArray($N)" : "dest.writeDouble($N)";
                 break;
             case ListTypes.STRING_LIST:
                 format = "dest.writeStringList($N)";
@@ -224,7 +228,9 @@ public final class ClassGenerator {
             default: {
                 if (field.isParcelableTypedList()) {
                     format = "dest.writeTypedList($N)";
-                } else if (field.isParcelable()) {
+                } else if(field.isParcelableArray()){
+                    format = "dest.writeTypedArray($N, flags)";
+                }else if (field.isParcelable()) {
                     format = "dest.writeParcelable($N, flags)";
                 }
             }
