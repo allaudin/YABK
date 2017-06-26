@@ -102,12 +102,17 @@ public class FieldProcessor {
         if (isList()) {
             List<? extends TypeMirror> args = ((DeclaredType) element.asType()).getTypeArguments();
             if (!args.isEmpty()) {
-                Element listElement = typeUtils.asElement(args.get(0));
-                model.setPackageName(packageOfElement(listElement));
-                model.setFieldType(getFieldType(listElement));
-                model.setList(true);
-                model.setParcelableTypedList(isParcelable(listElement));
-                return model;
+
+                boolean nestedGen = ((DeclaredType) ((DeclaredType) args.get(0)).asElement().asType()).getTypeArguments().size() > 0;
+                if (!nestedGen) {
+                    Element listElement = typeUtils.asElement(args.get(0));
+                    model.setPackageName(packageOfElement(listElement));
+                    model.setFieldType(getFieldType(listElement));
+                    model.setList(true);
+                    model.setParcelableTypedList(isParcelable(listElement));
+                    return model;
+                }
+
             } // end if
 
         }
