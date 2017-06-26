@@ -186,12 +186,6 @@ public class FieldModel {
             return actualTypes;
         }
 
-        @Override
-        public String toString() {
-            return "{" +
-                    "actualTypes=" + actualTypes +
-                    '}';
-        }
     } // ActualTypeInfo
 
 
@@ -206,7 +200,7 @@ public class FieldModel {
 
     @Override
     public String toString() {
-        return "FieldModel{" +
+        return "{" +
                 "packageName='" + packageName + '\'' +
                 ", fieldName='" + fieldName + '\'' +
                 ", fieldType='" + fieldType + '\'' +
