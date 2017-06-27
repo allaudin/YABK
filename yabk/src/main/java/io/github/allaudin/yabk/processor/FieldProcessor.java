@@ -127,10 +127,9 @@ public class FieldProcessor {
         if (isGeneric()) {
 
             model.setGeneric(true);
+            model.setFieldType(Utils.getClassName(typeUtils.erasure(element.asType()).toString()));
 
             FieldModel.ActualTypeInfo actualTypes = new FieldModel.ActualTypeInfo();
-
-            model.setFieldType(Utils.getClassName(typeUtils.erasure(element.asType()).toString()));
             List<? extends TypeMirror> args = ((DeclaredType) element.asType()).getTypeArguments();
             for (TypeMirror type : args) {
                 Element typeElement = typeUtils.asElement(type);

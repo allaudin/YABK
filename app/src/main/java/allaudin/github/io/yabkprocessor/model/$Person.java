@@ -1,5 +1,9 @@
 package allaudin.github.io.yabkprocessor.model;
 
+import android.os.Bundle;
+
+import java.util.List;
+
 import io.github.allaudin.yabk.YabkProcess;
 
 /**
@@ -11,5 +15,10 @@ import io.github.allaudin.yabk.YabkProcess;
 @YabkProcess
 abstract class $Person {
     A<String, Integer, Float> lists;
+    A[] as;
+    MyModel myModel;
+    MyModel[] myModels;
+    List<MyModel> modelList;
+    Bundle bundle;
 //    User user;
 }
