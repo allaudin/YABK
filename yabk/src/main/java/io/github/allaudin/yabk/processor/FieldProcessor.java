@@ -117,8 +117,7 @@ public class FieldProcessor {
 
         }
 
-        // TODO: 6/23/17 add array type check
-        // other declared type - add Array Type check
+        // other declared type 
         model.setParcelable(isParcelable(element));
         model.setFieldType(getFieldType());
         model.setPackageName(packageOfDeclaredElement());
