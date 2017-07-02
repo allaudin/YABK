@@ -1,4 +1,4 @@
-package io.github.allaudin.yabk.generator;
+package io.github.allaudin.yabk.compiler.generator;
 
 import com.squareup.javapoet.ArrayTypeName;
 import com.squareup.javapoet.ClassName;
@@ -11,7 +11,7 @@ import java.util.List;
 
 import javax.lang.model.element.Modifier;
 
-import io.github.allaudin.yabk.model.FieldModel;
+import io.github.allaudin.yabk.compiler.model.FieldModel;
 
 /**
  * Stores information about field and generates getters/setters for the field (if asked)

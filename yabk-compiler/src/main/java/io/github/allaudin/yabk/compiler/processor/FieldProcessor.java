@@ -1,4 +1,4 @@
-package io.github.allaudin.yabk.processor;
+package io.github.allaudin.yabk.compiler.processor;
 
 import java.util.List;
 
@@ -11,10 +11,10 @@ import javax.lang.model.type.TypeMirror;
 import javax.lang.model.util.Elements;
 import javax.lang.model.util.Types;
 
-import io.github.allaudin.yabk.ListTypes;
-import io.github.allaudin.yabk.Utils;
-import io.github.allaudin.yabk.YabkLogger;
-import io.github.allaudin.yabk.model.FieldModel;
+import io.github.allaudin.yabk.compiler.ListTypes;
+import io.github.allaudin.yabk.compiler.Utils;
+import io.github.allaudin.yabk.compiler.YabkLogger;
+import io.github.allaudin.yabk.compiler.model.FieldModel;
 
 /**
  * Field processor
@@ -102,18 +102,22 @@ public class FieldProcessor {
         if (isList()) {
             List<? extends TypeMirror> args = ((DeclaredType) element.asType()).getTypeArguments();
             if (!args.isEmpty()) {
-                Element listElement = typeUtils.asElement(args.get(0));
-                model.setPackageName(packageOfElement(listElement));
-                model.setFieldType(getFieldType(listElement));
-                model.setList(true);
-                model.setParcelableTypedList(isParcelable(listElement));
-                return model;
+
+                boolean nestedGen = ((DeclaredType) ((DeclaredType) args.get(0)).asElement().asType()).getTypeArguments().size() > 0;
+                if (!nestedGen) {
+                    Element listElement = typeUtils.asElement(args.get(0));
+                    model.setPackageName(packageOfElement(listElement));
+                    model.setFieldType(getFieldType(listElement));
+                    model.setList(true);
+                    model.setParcelableTypedList(isParcelable(listElement));
+                    return model;
+                }
+
             } // end if
 
         }
 
-        // TODO: 6/23/17 add array type check
-        // other declared type - add Array Type check
+        // other declared type 
         model.setParcelable(isParcelable(element));
         model.setFieldType(getFieldType());
         model.setPackageName(packageOfDeclaredElement());
@@ -122,10 +126,9 @@ public class FieldProcessor {
         if (isGeneric()) {
 
             model.setGeneric(true);
+            model.setFieldType(Utils.getClassName(typeUtils.erasure(element.asType()).toString()));
 
             FieldModel.ActualTypeInfo actualTypes = new FieldModel.ActualTypeInfo();
-
-            model.setFieldType(Utils.getClassName(typeUtils.erasure(element.asType()).toString()));
             List<? extends TypeMirror> args = ((DeclaredType) element.asType()).getTypeArguments();
             for (TypeMirror type : args) {
                 Element typeElement = typeUtils.asElement(type);

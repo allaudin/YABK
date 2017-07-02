@@ -1,4 +1,4 @@
-package io.github.allaudin.yabk;
+package io.github.allaudin.yabk.compiler;
 
 /**
  * Utility class for YABK processor.

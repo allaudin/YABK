@@ -1,10 +1,10 @@
-package io.github.allaudin.yabk.processor;
+package io.github.allaudin.yabk.compiler.processor;
 
 import javax.lang.model.element.TypeElement;
 
-import io.github.allaudin.yabk.Utils;
+import io.github.allaudin.yabk.compiler.Utils;
 import io.github.allaudin.yabk.YabkProcess;
-import io.github.allaudin.yabk.model.ClassModel;
+import io.github.allaudin.yabk.compiler.model.ClassModel;
 
 /**
  * Class processor

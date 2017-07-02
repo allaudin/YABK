@@ -1,6 +1,9 @@
 package allaudin.github.io.yabkprocessor.model;
 
+import android.os.Bundle;
+
 import java.util.List;
+import java.util.Set;
 
 import io.github.allaudin.yabk.YabkProcess;
 
@@ -12,10 +15,13 @@ import io.github.allaudin.yabk.YabkProcess;
 
 @YabkProcess
 abstract class $Person {
-    String[] strings;
-    MyModel[] models;
-    List<String> lists;
-    User user;
-    User[] users;
+    A<String, Integer, Float> lists;
+    protected A[] as;
+    MyModel myModel;
+    MyModel[] myModels;
+    List rawList;
+    Set<String> stringSet;
+    List<MyModel> modelList;
+    Bundle bundle;
 //    User user;
 }

@@ -1,4 +1,4 @@
-package io.github.allaudin.yabk;
+package io.github.allaudin.yabk.compiler;
 
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -12,14 +12,14 @@ import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.Modifier;
 import javax.lang.model.element.TypeElement;
 
-import io.github.allaudin.yabk.generator.ClassGenerator;
-import io.github.allaudin.yabk.generator.FieldGenerator;
-import io.github.allaudin.yabk.model.ClassModel;
-import io.github.allaudin.yabk.model.FieldModel;
-import io.github.allaudin.yabk.processor.ClassProcessor;
-import io.github.allaudin.yabk.processor.FieldProcessor;
-
-import static io.github.allaudin.yabk.YabkLogger.note;
+import io.github.allaudin.yabk.YabkProcess;
+import io.github.allaudin.yabk.YabkSkip;
+import io.github.allaudin.yabk.compiler.generator.ClassGenerator;
+import io.github.allaudin.yabk.compiler.generator.FieldGenerator;
+import io.github.allaudin.yabk.compiler.model.ClassModel;
+import io.github.allaudin.yabk.compiler.model.FieldModel;
+import io.github.allaudin.yabk.compiler.processor.ClassProcessor;
+import io.github.allaudin.yabk.compiler.processor.FieldProcessor;
 
 public class YabkProcessor extends AbstractProcessor {
 
@@ -31,7 +31,7 @@ public class YabkProcessor extends AbstractProcessor {
 
         // round completed
         if (roundEnvironment.processingOver()) {
-            note("%s", "YABK round completed [Everything is OK]");
+            YabkLogger.note("%s", "YABK round completed [Everything is OK]");
             return true;
         }
 
@@ -42,13 +42,13 @@ public class YabkProcessor extends AbstractProcessor {
             boolean shouldSkip = !e.getModifiers().contains(Modifier.ABSTRACT) || !e.getKind().isClass();
 
             if (shouldSkip) {
-                note("Skipping %s  [%s]", e.getKind(), e.getSimpleName());
+                YabkLogger.note("Skipping %s  [%s]", e.getKind(), e.getSimpleName());
                 continue;
             }
 
             TypeElement type = (TypeElement) e;
 
-            note("Processing %s", e.toString());
+            YabkLogger.note("Processing %s", e.toString());
 
             ClassModel classModel = ClassProcessor.newInstance(type).process();
             FieldGenerator fieldGenerator = FieldGenerator.getInstance();
