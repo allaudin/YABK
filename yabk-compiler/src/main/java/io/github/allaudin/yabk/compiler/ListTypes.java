@@ -1,10 +1,10 @@
-package io.github.allaudin.yabk;
+package io.github.allaudin.yabk.compiler;
 
 /**
  * Types of Lists parsed by this generator
  *
  * @author M.Allaudin
- * @see io.github.allaudin.yabk.generator.ClassGenerator
+ * @see io.github.allaudin.yabk.compiler.generator.ClassGenerator
  */
 
 public final class ListTypes {

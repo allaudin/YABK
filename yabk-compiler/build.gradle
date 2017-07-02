@@ -5,33 +5,37 @@ plugins {
 apply plugin: 'java'
 apply plugin: 'maven'
 
-dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
+version = rootProject.ext.version
+
+ext {
+    javapoet = '1.9.0'
+    localReleasePath = "${buildDir}/release"
 }
 
-//noinspection GroovyUnusedAssignment
-sourceCompatibility = "1.7"
-//noinspection GroovyUnusedAssignment
-targetCompatibility = "1.7"
+jar {
+    from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
+    archiveName "yabk-compiler-${project.version}.jar"
+}
 
 
 task sourcesJar(type: Jar, dependsOn: classes) {
     classifier 'sources'
     from sourceSets.main.allSource
-} // sourceJar
+}
 
 artifacts {
     archives sourcesJar
-} // artifacts
+}
 
 assemble.dependsOn 'sourcesJar'
 
-jar {
-    from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
-    archiveName  "yabk-${project.version}.jar"
-} // fatJar
+tasks.bintrayUpload.dependsOn 'uploadArchives'
+tasks.uploadArchives.dependsOn 'assemble'
 
-tasks.bintrayUpload.dependsOn 'assemble'
+dependencies {
+    compile project(':yabk')
+    compile "com.squareup:javapoet:${project.ext.javapoet}"
+}
 
 bintray {
 
@@ -63,15 +67,17 @@ bintray {
 
 } // bintray
 
-def localReleasePath = "${buildDir}/release"
 
 uploadArchives {
     repositories.mavenDeployer {
         pom.groupId = rootProject.ext.groupId
         pom.artifactId = project.name
         pom.version = project.version
-        repository(url: "file://${localReleasePath}")
+        repository(url: "file://${project.ext.localReleasePath}")
     }
 }
 
-
+//noinspection GroovyUnusedAssignment
+sourceCompatibility = "1.7"
+//noinspection GroovyUnusedAssignment
+targetCompatibility = "1.7"

@@ -1,4 +1,4 @@
-package io.github.allaudin.yabk.generator;
+package io.github.allaudin.yabk.compiler.generator;
 
 import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.CodeBlock;
@@ -14,10 +14,10 @@ import java.util.Set;
 
 import javax.lang.model.element.Modifier;
 
-import io.github.allaudin.yabk.ListTypes;
+import io.github.allaudin.yabk.compiler.ListTypes;
 import io.github.allaudin.yabk.Methods;
-import io.github.allaudin.yabk.model.ClassModel;
-import io.github.allaudin.yabk.model.FieldModel;
+import io.github.allaudin.yabk.compiler.model.ClassModel;
+import io.github.allaudin.yabk.compiler.model.FieldModel;
 
 /**
  * Generates class from given fields.

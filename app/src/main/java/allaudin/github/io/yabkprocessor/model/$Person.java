@@ -16,7 +16,7 @@ import io.github.allaudin.yabk.YabkProcess;
 @YabkProcess
 abstract class $Person {
     A<String, Integer, Float> lists;
-    A[] as;
+    protected A[] as;
     MyModel myModel;
     MyModel[] myModels;
     List rawList;

@@ -1,4 +1,4 @@
-package io.github.allaudin.yabk.processor;
+package io.github.allaudin.yabk.compiler.processor;
 
 import java.util.List;
 
@@ -11,10 +11,10 @@ import javax.lang.model.type.TypeMirror;
 import javax.lang.model.util.Elements;
 import javax.lang.model.util.Types;
 
-import io.github.allaudin.yabk.ListTypes;
-import io.github.allaudin.yabk.Utils;
-import io.github.allaudin.yabk.YabkLogger;
-import io.github.allaudin.yabk.model.FieldModel;
+import io.github.allaudin.yabk.compiler.ListTypes;
+import io.github.allaudin.yabk.compiler.Utils;
+import io.github.allaudin.yabk.compiler.YabkLogger;
+import io.github.allaudin.yabk.compiler.model.FieldModel;
 
 /**
  * Field processor

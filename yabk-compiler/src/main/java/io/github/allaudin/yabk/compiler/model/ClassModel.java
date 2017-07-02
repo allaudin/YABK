@@ -1,4 +1,4 @@
-package io.github.allaudin.yabk.model;
+package io.github.allaudin.yabk.compiler.model;
 
 import io.github.allaudin.yabk.Methods;
 

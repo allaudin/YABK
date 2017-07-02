@@ -19,7 +19,7 @@ public class MyModel implements Parcelable{
     MyModel[] model;
 
     protected MyModel(Parcel in) {
-        bundle = in.readBundle();
+        bundle = in.readBundle(bundle.getClass().getClassLoader());
         model = in.createTypedArray(MyModel.CREATOR);
     }
 

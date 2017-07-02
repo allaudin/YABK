@@ -1,4 +1,4 @@
-package io.github.allaudin.yabk;
+package io.github.allaudin.yabk.compiler;
 
 import javax.annotation.processing.Messager;
 import javax.lang.model.element.Element;
