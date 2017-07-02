@@ -9,6 +9,8 @@ dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
 }
 
+version = rootProject.ext.version
+
 //noinspection GroovyUnusedAssignment
 sourceCompatibility = "1.7"
 //noinspection GroovyUnusedAssignment
