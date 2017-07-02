@@ -32,10 +32,6 @@ assemble.dependsOn 'sourcesJar'
 tasks.bintrayUpload.dependsOn 'uploadArchives'
 tasks.uploadArchives.dependsOn 'assemble'
 
-dependencies {
-    compile project(':yabk')
-    compile "com.squareup:javapoet:${project.ext.javapoet}"
-}
 
 bintray {
 
@@ -75,6 +71,11 @@ uploadArchives {
         pom.version = project.version
         repository(url: "file://${project.ext.localReleasePath}")
     }
+}
+
+dependencies {
+    compileOnly project(':yabk')
+    compile "com.squareup:javapoet:${project.ext.javapoet}"
 }
 
 //noinspection GroovyUnusedAssignment
