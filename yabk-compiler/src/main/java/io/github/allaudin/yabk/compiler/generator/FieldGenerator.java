@@ -152,7 +152,7 @@ public final class FieldGenerator {
             //noinspection ConfusingArgumentToVarargsMethod
             TypeName types = ParameterizedTypeName.get(genType, classesArray);
             builder.returns(types);
-            builder.addStatement("return this.$1N = $1N", fieldModel.getFieldName());
+            builder.addStatement("return this.$1N", fieldModel.getFieldName());
             return builder.build();
         }
 
@@ -162,7 +162,7 @@ public final class FieldGenerator {
             String format = "return this.$1N == null? $2S: this.$1N";
             builder.addStatement(format, fieldModel.getFieldName(), "");
         } else {
-            builder.addStatement("return this.$1N = $1N", fieldModel.getFieldName());
+            builder.addStatement("return this.$1N", fieldModel.getFieldName());
         }
         ClassName list = ClassName.get("java.util", "List");
 
