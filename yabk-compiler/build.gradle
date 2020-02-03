@@ -74,7 +74,7 @@ uploadArchives {
 }
 
 dependencies {
-    compileOnly project(':yabk')
+    compile project(':yabk')
     compile "com.squareup:javapoet:${project.ext.javapoet}"
 }
 
